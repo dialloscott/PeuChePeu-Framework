@@ -18,7 +18,7 @@ class PostTable extends Table
     {
         $count = $this->database->fetchColumn('SELECT COUNT(id) FROM posts');
 
-        return (new PaginatedQuery($this->database, 'SELECT * FROM posts ORDER BY created_at DESC', $count))
+        return (new PaginatedQuery($this->database, 'SELECT * FROM posts ORDER BY created_at DESC', $count, PostEntity::class))
             ->getPaginator()
             ->setCurrentPage($currentPage)
             ->setMaxPerPage($perPage);

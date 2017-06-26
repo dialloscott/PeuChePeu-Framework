@@ -2,6 +2,8 @@
 
 namespace App\Blog;
 
+use Imagine\Gd\Imagine;
+use Intervention\Image\ImageManager;
 use Psr\Http\Message\UploadedFileInterface;
 
 class PostUpload
@@ -12,6 +14,14 @@ class PostUpload
      * @var string
      */
     private $path;
+
+    /**
+     * Liste les formats à générer
+     * @var array
+     */
+    private $formats = [
+        'thumb' => [318, 180]
+    ];
 
     public function __construct(string $path)
     {
@@ -28,12 +38,29 @@ class PostUpload
      */
     public function upload(UploadedFileInterface $file, ?string $oldImage = null): string
     {
+        // On supprime l'image précédente
         $this->delete($oldImage);
+
+        // On crée le dossier si il n'existe pas déjà
         if (!file_exists($this->path)) {
             mkdir($this->path, 0777, true);
         }
+
+        // On rajoute "_copy" à la fin du fichier (si doublon)
         $filename = $this->addSuffix($file->getClientFilename());
+
+        // On déplace le fichier
         $file->moveTo($this->getFullPath($filename));
+
+        // On génère les différents formats
+        foreach ($this->formats as $format => $size) {
+            $source = $this->getFullPath($filename);
+            $destination = $this->getFullPath($this->getFilenameForFormat($filename, $format));
+            $manager = new ImageManager(['driver' => 'gd']);
+            [$width, $height] = $size;
+
+            $manager->make($source)->fit($width, $height)->save($destination);
+        }
 
         return $file->getClientFilename();
     }
@@ -46,9 +73,17 @@ class PostUpload
     public function delete(?string $filename): void
     {
         if ($filename) {
+            // On supprimé l'image originale
             $fullpath = $this->getFullPath($filename);
             if (file_exists($fullpath)) {
                 unlink($fullpath);
+            }
+            // On supprime les formats
+            foreach ($this->formats as $format => $_) {
+                $file = $this->getFullPath($this->getFilenameForFormat($filename, $format));
+                if (file_exists($file)) {
+                    unlink($file);
+                }
             }
         }
     }
@@ -81,5 +116,17 @@ class PostUpload
         }
 
         return $name;
+    }
+
+    /**
+     * Renvoie le nom du fichier avec le format en suffix
+     *
+     * @param string $name
+     * @param string $format
+     * @return string
+     */
+    private function getFilenameForFormat(string $name, string $format): string {
+        ['filename' => $filename, 'extension' => $extension] = pathinfo($name);
+        return $filename . '_' . $format . '.' . $extension;
     }
 }
