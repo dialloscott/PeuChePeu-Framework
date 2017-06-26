@@ -49,7 +49,10 @@ class AdminBlogController extends Controller
             return $this->redirect('blog.admin.index');
         }
 
-        return $this->render('@blog/admin/create', array_merge(['post' => $post], $blogRequest->getAttributes()));
+        return $this->render('@blog/admin/create', [
+            'post'   => $post,
+            'errors' => $blogRequest->getErrors()
+        ]);
     }
 
     public function edit(int $id, PostTable $postTable): string
@@ -63,7 +66,7 @@ class AdminBlogController extends Controller
     {
         $post = $postTable->findOrFail($id);
         $postParams = $blogRequest->getParams();
-        if ($blogRequest->validates()) {
+        if ($blogRequest->validates($id)) {
             /* @var UploadedFileInterface $file */
             $file = $blogRequest->getRequest()->getUploadedFiles()['image'];
 

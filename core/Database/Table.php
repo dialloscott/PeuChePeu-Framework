@@ -15,7 +15,7 @@ class Table
     /**
      * Nom de la table en abse de données.
      */
-    protected const TABLE = null;
+    public const TABLE = null;
 
     /**
      * Permet de définir dans quel entité sauvegarder les résultats.
@@ -114,5 +114,15 @@ class Table
     public function count(): int
     {
         return $this->database->fetchColumn('SELECT COUNT(id) FROM ' . static::TABLE);
+    }
+
+    /**
+     * Récupère l'instance de la base de données.
+     *
+     * @return Database
+     */
+    public function getDatabase(): Database
+    {
+        return $this->database;
     }
 }

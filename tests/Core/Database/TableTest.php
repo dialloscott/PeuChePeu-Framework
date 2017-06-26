@@ -2,14 +2,14 @@
 use Core\Database\Table;
 
 class FakeTableTest extends Table {
-    protected const TABLE = "fake";
+    const TABLE = "fake";
 }
 
 class FakeEntityTest { }
 
 class FakeTableEntity extends Table {
-    protected const TABLE = "fake";
-    protected const ENTITY = FakeEntityTest::class;
+    const TABLE = "fake";
+    const ENTITY = FakeEntityTest::class;
 }
 
 class TableTest extends \PHPUnit\Framework\TestCase {

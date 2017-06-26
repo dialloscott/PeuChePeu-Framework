@@ -32,7 +32,8 @@ class PostUpload
         if (!file_exists($this->path)) {
             mkdir($this->path, 0777, true);
         }
-        $file->moveTo($this->getFullPath($file->getClientFilename()));
+        $filename = $this->addSuffix($file->getClientFilename());
+        $file->moveTo($this->getFullPath($filename));
 
         return $file->getClientFilename();
     }
@@ -52,8 +53,33 @@ class PostUpload
         }
     }
 
+    /**
+     * Retourne le chemin absolu pour à partir du nom du fichier.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
     private function getFullPath(string $name): string
     {
         return $this->path . '/' . $name;
+    }
+
+    /**
+     * Ajoute un suffix "copy" à la fin du nom du fichier si il existe déjà.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    private function addSuffix(string $name): string
+    {
+        if (file_exists($this->getFullPath($name))) {
+            ['filename' => $filename, 'extension' => $extension] = pathinfo($name);
+
+            return $this->addSuffix($filename . '_copy.' . $extension);
+        }
+
+        return $name;
     }
 }

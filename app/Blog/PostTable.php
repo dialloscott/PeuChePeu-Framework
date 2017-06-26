@@ -11,8 +11,8 @@ use Core\Database\Table;
  */
 class PostTable extends Table
 {
-    protected const TABLE = 'posts';
-    protected const ENTITY = PostEntity::class;
+    public const TABLE = 'posts';
+    public const ENTITY = PostEntity::class;
 
     public function findPaginated($perPage = 10, $currentPage = 1)
     {

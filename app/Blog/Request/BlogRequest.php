@@ -31,13 +31,18 @@ class BlogRequest
 
     /**
      * Valide les données.
+     *
+     * @param int|null $postId
+     *
+     * @return bool
      */
-    public function validates(): bool
+    public function validates(?int $postId = null): bool
     {
         $params = array_merge($this->request->getParsedBody(), $this->request->getUploadedFiles());
         $validator = (new Validator($params))
             ->required('name', 'content', 'created_at', 'image', 'slug')
             ->slug('slug')
+            ->unique('slug', $this->postTable, $postId)
             ->minLength('name', 4)
             ->minLength('content', 20)
             ->dateTime('created_at')
@@ -89,10 +94,5 @@ class BlogRequest
     public function getRequest(): ServerRequestInterface
     {
         return $this->request;
-    }
-
-    public function getAttributes(): array
-    {
-        return $this->request->getAttributes();
     }
 }

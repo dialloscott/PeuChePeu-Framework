@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Database\Table;
 use DateTime;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -141,6 +142,23 @@ class Validator
             ) {
                 $this->errors[$key] = 'Le fichier ne semble pas valide';
             }
+        }
+
+        return $this;
+    }
+
+    public function unique($key, Table $table, ?int $id = null): Validator
+    {
+        $value = $this->getValue($key);
+        $query = 'SELECT COUNT(id) FROM ' . $table::TABLE . " WHERE $key = ?";
+        $params = [$value];
+        if ($id) {
+            $query .= ' AND id != ?';
+            $params[] = $id;
+        }
+        $count = (int) $table->getDatabase()->fetchColumn($query, $params);
+        if ($count !== 0) {
+            $this->errors[$key] = 'Cette valeur est déjà utilisée';
         }
 
         return $this;

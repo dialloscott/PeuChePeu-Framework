@@ -10,6 +10,9 @@
                 <div class="col-sm-3">
                     <div class="card">
                         <div class="card-header">{{ post.name }}</div>
+                        {% if post.image %}
+                        <img class="card-img-top" src="/uploads/posts/{{ post.image }}" alt="Card image cap">
+                        {% endif %}
                         <div class="card-block">
                             <p class="card-text">
                                 {{ post.content | excerpt }}

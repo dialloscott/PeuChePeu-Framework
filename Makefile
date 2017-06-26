@@ -31,7 +31,7 @@ lint: vendor ## Vérifie le code
 	./vendor/bin/php-cs-fixer fix --diff --dry-run -v
 
 lint.fix: vendor ## Vérifie le code et le corrige tout seul
-	./vendor/bin/phpcbf && \
+	./vendor/bin/phpcbf; \
 	./vendor/bin/php-cs-fixer fix --diff -v
 
 test: vendor ## PHPUnit all the code !
