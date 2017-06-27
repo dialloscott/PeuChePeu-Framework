@@ -1,15 +1,11 @@
 <?php
-
-namespace Core;
+namespace Tests\Core;
 
 use Core\Database\Database;
 use Core\Database\Table;
+use Core\Validator;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UploadedFileInterface;
-
-class FakeTable extends Table {
-    const TABLE = 'fake';
-}
 
 class ValidatorTest extends TestCase {
 
@@ -172,51 +168,81 @@ class ValidatorTest extends TestCase {
     }
 
     public function testUnique () {
-        $table = $this->getMockBuilder(FakeTable::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getDatabase'])
-            ->getMock();
         $database = $this->getMockBuilder(Database::class)
             ->disableOriginalConstructor()
             ->setMethods(['fetchColumn'])
             ->getMock();
-        $table->method('getDatabase')->willReturn($database);
-
         $database->expects($this->once())
             ->method('fetchColumn')
             ->with(
-                'SELECT COUNT(id) FROM fake WHERE slug = ?',
+                'SELECT id FROM fake WHERE slug = ?',
                 ['demo-slug']
             )
-            ->willReturn(2);
+            ->willReturn('12');
 
         $errors = $this->makeValidator(['slug' => 'demo-slug'])
-            ->unique('slug', $table)
+            ->setDatabase($database)
+            ->unique('slug', 'fake')
             ->getErrors();
         $this->assertCount(1, $errors);
     }
 
     public function testUniqueExceptOneId () {
-        $table = $this->getMockBuilder(FakeTable::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getDatabase'])
-            ->getMock();
         $database = $this->getMockBuilder(Database::class)
             ->disableOriginalConstructor()
             ->setMethods(['fetchColumn'])
             ->getMock();
-        $table->method('getDatabase')->willReturn($database);
-
         $database->expects($this->once())
             ->method('fetchColumn')
             ->with(
-                'SELECT COUNT(id) FROM fake WHERE slug = ? AND id != ?',
+                'SELECT id FROM fake WHERE slug = ? AND id != ?',
                 ['demo-slug', 3]
             )
-            ->willReturn(2);
+            ->willReturn('12');
 
         $errors = $this->makeValidator(['slug' => 'demo-slug'])
-            ->unique('slug', $table, 3)
+            ->setDatabase($database)
+            ->unique('slug', 'fake', 3)
+            ->getErrors();
+        $this->assertCount(1, $errors);
+    }
+
+    public function testExistsWithExistingResult () {
+        $database = $this->getMockBuilder(Database::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['fetchColumn'])
+            ->getMock();
+        $database->expects($this->once())
+            ->method('fetchColumn')
+            ->with(
+                'SELECT id FROM fake WHERE id = ?',
+                [3]
+            )
+            ->willReturn('12');
+
+        $errors = $this->makeValidator(['category_id' => 3])
+            ->setDatabase($database)
+            ->exists('category_id', 'fake')
+            ->getErrors();
+        $this->assertCount(0, $errors);
+    }
+
+    public function testExistsWithNonExistingResult () {
+        $database = $this->getMockBuilder(Database::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['fetchColumn'])
+            ->getMock();
+        $database->expects($this->once())
+            ->method('fetchColumn')
+            ->with(
+                'SELECT id FROM fake WHERE id = ?',
+                [3]
+            )
+            ->willReturn('');
+
+        $errors = $this->makeValidator(['category_id' => 3])
+            ->setDatabase($database)
+            ->exists('category_id', 'fake')
             ->getErrors();
         $this->assertCount(1, $errors);
     }

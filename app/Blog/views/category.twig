@@ -1,0 +1,17 @@
+{% extends('@blog/index.twig') %}
+
+{% block title %}
+  Catégorie {{ category.name }}{% if page > 1 %}, page {{ page }}{% endif %}
+{% endblock %}
+
+{% block content  %}
+
+  <h1 style="margin-bottom: 2rem;">Tous les articles "{{ category.name }}"</h1>
+
+  {% block paginate %}{% endblock %}
+
+  {{ parent() }}
+
+  {{ paginate(posts, 'blog.category', {slug: (posts | first).category_slug}) }}
+
+{% endblock %}

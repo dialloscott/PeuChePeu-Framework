@@ -7,6 +7,7 @@ use Core\Twig\ModuleExtension;
 use Core\Twig\PagerfantaExtension;
 use Core\Twig\RouterExtension;
 use Core\Twig\TextExtension;
+use Core\Twig\TimeExtension;
 use Knlv\Slim\Views\TwigMessages;
 use Slim\Flash\Messages;
 
@@ -31,7 +32,8 @@ class TwigView implements ViewInterface
         ModuleExtension $moduleExtension,
         PagerfantaExtension $pagerfantaExtension,
         CsrfExtension $csrfExtension,
-        Messages $flashMessages
+        Messages $flashMessages,
+        TimeExtension $timeExtension
     ) {
         $this->loader = new \Twig_Loader_Filesystem();
         $this->twig = new \Twig_Environment($this->loader, [
@@ -42,6 +44,7 @@ class TwigView implements ViewInterface
         $this->twig->addExtension($routerExtension);
         $this->twig->addExtension($pagerfantaExtension);
         $this->twig->addExtension($csrfExtension);
+        $this->twig->addExtension($timeExtension);
         $this->twig->addExtension(new TwigMessages($flashMessages));
         $this->twig->addExtension(new TextExtension());
     }

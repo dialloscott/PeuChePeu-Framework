@@ -1,34 +1,56 @@
 {% extends('layout.twig') %}
 
 {% block title %}
-    Blog{% if page > 1 %}, page {{ page }}{% endif %}
+  Blog{% if page > 1 %}, page {{ page }}{% endif %}
 {% endblock %}
 {% block content %}
-    {% for row in posts | batch(4) %}
-        <div class="row">
-            {% for post in row %}
-                <div class="col-sm-3">
-                    <div class="card">
-                        <div class="card-header">{{ post.name }}</div>
-                        {% if post.image %}
-                        <img style="width: 100%; height: auto;" class="card-img-top" src="{{ post.thumb }}" alt="{{ post.name }}" width="318" height="180">
-                        {% endif %}
-                        <div class="card-block">
-                            <p class="card-text">
-                                {{ post.content | excerpt }}
-                            </p>
-                            <p>
-                                <a href="{{ path_for('blog.show', {slug: post.slug}) }}" class="btn btn-primary">
-                                    Voir l'article
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
 
-    {{ paginate(posts, 'blog.index') }}
+  <div class="row">
+    <div class="col-md-9">
+
+      {% for row in posts | batch(3) %}
+        <div class="card-deck" style="margin-bottom: 2rem;">
+          {% for post in row %}
+            <div class="card">
+              <div class="card-header">{{ post.category_name }}</div>
+              {% if post.image %}
+                <img style="width: 100%; height: auto;" class="card-img-top" src="{{ post.thumb }}" alt="{{ post.name }}"
+                     width="318" height="180">
+              {% endif %}
+              <div class="card-block">
+                <h4 class="card-title">{{ post.name }}</h4>
+                <p class="card-text">
+                  {{ post.content | excerpt }}
+                </p>
+                <p class="text-muted">
+                  <small>{{ time_tag(post.created_at) }}</small>
+                </p>
+              </div>
+              <div class="card-footer text-right">
+                <a href="{{ path_for('blog.show', {slug: post.slug}) }}" class="btn btn-primary">
+                  Voir l'article
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      {% block paginate %}
+        {{ paginate(posts, 'blog.index') }}
+      {% endblock paginate %}
+
+    </div>
+    <div class="col-md-3">
+
+      <ul class="list-group">
+        {% for c in categories %}
+          <a class="list-group-item {% if c.id == category.id %}active{% endif %}" href="{{ path_for('blog.category', {slug: c.slug}) }}">{{ c.name }}</a>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+
 
 {% endblock %}

@@ -2,8 +2,23 @@
 
 {% block title %}{{ post.name }}{% endblock %}
 {% block content %}
-    <h1>{{ post.name }}</h1>
+  <h1>{{ post.name }}</h1>
 
+  <p>
+    <a href="{{ path_for('blog.category', {slug: post.category_slug}) }}" title="{{ post.category_name }}">
+      {{ post.category_name }}
+    </a> |
+    <span class="text-muted">{{ time_tag(post.created_at) }}</span>
+  </p>
+
+  {% if post.image %}
+    <p>
+      <img src="/uploads/posts/{{ post.image }}" alt="" width="100%">
+    </p>
+  {% endif %}
+
+  <p>
     {{ post.content | nl2br }}
+  </p>
 
 {% endblock %}

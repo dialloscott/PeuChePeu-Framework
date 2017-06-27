@@ -1,4 +1,6 @@
 <?php
+namespace Tests\Core\Database;
+
 use Core\Database\Table;
 
 class FakeTableTest extends Table {
@@ -61,7 +63,7 @@ class TableTest extends \PHPUnit\Framework\TestCase {
                 $this->equalTo('SELECT * FROM fake WHERE id = ?'),
                 $this->equalTo([2])
             )
-            ->willReturn(new stdClass());
+            ->willReturn(new \stdClass());
 
         $this->table->find(2);
     }
@@ -75,7 +77,7 @@ class TableTest extends \PHPUnit\Framework\TestCase {
                 $this->equalTo([2]),
                 $this->equalTo(FakeEntityTest::class)
             )
-            ->willReturn(new stdClass());
+            ->willReturn(new \stdClass());
 
         $this->table = new FakeTableEntity($this->database);
         $this->table->find(2);

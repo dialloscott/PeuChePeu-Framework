@@ -1,6 +1,15 @@
 <div class="form-group{% if errors[key] %} has-danger{% endif %}">
     <label for="{{ key }}">{{ label }}</label>
-    {% if type == 'textarea' %}
+    {% if options %}
+        <select
+            id="{{ key }}"
+            name="{{ key }}"
+            class="form-control {% if errors[key] %}form-control-danger{% endif %}">
+            {% for k,v in options %}
+                <option value="{{ k }}" {% if k == value %}selected{% endif %}>{{ v }}</option>
+            {% endfor %}
+        </select>
+    {% elseif type == 'textarea' %}
         <textarea
                 id="{{ key }}"
                 name="{{ key }}"

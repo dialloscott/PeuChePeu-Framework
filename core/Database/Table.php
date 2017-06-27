@@ -58,6 +58,22 @@ class Table
         return $record;
     }
 
+    public function findList(string $field)
+    {
+        $records = $this->database->fetchAll('SELECT id, ' . $field . ' FROM ' . static::TABLE, [], static::ENTITY);
+        $results = [];
+        foreach ($records as $record) {
+            $results[$record->id] = $record->$field;
+        }
+
+        return $results;
+    }
+
+    public function findAll()
+    {
+        return $this->database->fetchAll('SELECT * FROM ' . static::TABLE, [], static::ENTITY);
+    }
+
     /**
      * Supprime un enregistrement.
      *
@@ -142,6 +158,7 @@ class Table
         return (new PaginatedQuery(
             $this->database,
             'SELECT * FROM ' . $table . ' ORDER BY id DESC',
+            [],
             $count,
             static::ENTITY
         ))

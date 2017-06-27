@@ -1,4 +1,6 @@
 <?php
+namespace Tests\App\Auth;
+
 use App\Auth\AuthService;
 use App\Auth\Entity\User;
 use App\Auth\Middleware\RoleMiddleware;

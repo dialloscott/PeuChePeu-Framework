@@ -24,23 +24,31 @@ class PaginatedQuery implements AdapterInterface
      * @var Database
      */
     private $database;
+
     /**
      * @var null|string
      */
     private $entity;
 
     /**
+     * @var array
+     */
+    private $params;
+
+    /**
      * @param Database    $database
      * @param string      $query
+     * @param array       $params
      * @param int         $count
      * @param null|string $entity
      */
-    public function __construct(Database $database, string $query, int $count, ?string $entity = null)
+    public function __construct(Database $database, string $query, array $params, int $count, ?string $entity = null)
     {
         $this->query = $query;
         $this->count = $count;
         $this->database = $database;
         $this->entity = $entity;
+        $this->params = $params;
     }
 
     /**
@@ -66,7 +74,7 @@ class PaginatedQuery implements AdapterInterface
         $offset = (int) $offset;
         $length = (int) $length;
 
-        return $this->database->fetchAll("{$this->query} LIMIT $offset, $length", [], $this->entity);
+        return $this->database->fetchAll("{$this->query} LIMIT $offset, $length", $this->params, $this->entity);
     }
 
     /**

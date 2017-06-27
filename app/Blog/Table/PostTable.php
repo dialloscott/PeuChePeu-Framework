@@ -29,7 +29,46 @@ class PostTable extends Table
 
         return (new PaginatedQuery(
             $this->database,
-            'SELECT * FROM posts ORDER BY created_at DESC',
+            'SELECT 
+              posts.*,
+              categories.name as category_name, categories.slug as category_slug
+            FROM posts 
+            LEFT JOIN categories ON categories.id = posts.category_id
+            ORDER BY created_at DESC',
+            [],
+            $count,
+            PostEntity::class
+        ))
+            ->getPaginator()
+            ->setCurrentPage($currentPage)
+            ->setMaxPerPage($perPage);
+    }
+
+    /**
+     * Récupère les données paginées.
+     *
+     * @param int $perPage
+     * @param int $currentPage
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function findPaginatedByCategory($perPage, $currentPage, string $categorySlug)
+    {
+        $count = $this->database->fetchColumn('
+          SELECT COUNT(posts.id) 
+          FROM posts INNER JOIN categories ON categories.id = posts.category_id
+          WHERE categories.slug = ?', [$categorySlug]);
+
+        return (new PaginatedQuery(
+            $this->database,
+            'SELECT 
+              posts.*,
+              categories.name as category_name, categories.slug as category_slug
+            FROM posts 
+            LEFT JOIN categories ON categories.id = posts.category_id
+            WHERE categories.slug = ?
+            ORDER BY created_at DESC',
+            [$categorySlug],
             $count,
             PostEntity::class
         ))
@@ -49,7 +88,14 @@ class PostTable extends Table
      */
     public function findBySlug(string $slug)
     {
-        $result = $this->database->fetch('SELECT * FROM posts WHERE slug = ?', [$slug]);
+        $result = $this->database->fetch('
+          SELECT 
+            posts.*, 
+            categories.name as category_name, categories.slug as category_slug 
+          FROM posts 
+          LEFT JOIN categories ON categories.id = posts.category_id
+          WHERE posts.slug = ?
+        ', [$slug]);
         if ($result === false) {
             throw new NoRecordException();
         }

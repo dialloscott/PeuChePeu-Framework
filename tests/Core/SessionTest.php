@@ -1,4 +1,6 @@
 <?php
+namespace Tests\Core;
+
 class SessionTest extends \PHPUnit\Framework\TestCase {
 
     public function tearDown()

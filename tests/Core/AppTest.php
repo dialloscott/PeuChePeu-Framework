@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Core;
+
 class FakeModule extends \Core\Module {
 
     public const DEFINITIONS = [

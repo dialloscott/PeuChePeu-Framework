@@ -4,6 +4,7 @@ namespace App\Blog\Controller\Admin;
 
 use App\Blog\Table\CategoriesTable;
 use Core\Controller;
+use Core\Database\Database;
 use Core\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,7 +24,7 @@ class CategoriesController extends Controller
     {
         if ($request->getMethod() === 'POST') {
             $category = $this->getParams($request);
-            $errors = $this->validates($request, $categoriesTable);
+            $errors = $this->validates($request, $categoriesTable->getDatabase());
 
             if (empty($errors)) {
                 $categoriesTable->create($category);
@@ -42,7 +43,7 @@ class CategoriesController extends Controller
 
         if ($request->getMethod() === 'PUT') {
             $category = $this->getParams($request);
-            $errors = $this->validates($request, $categoriesTable, $id);
+            $errors = $this->validates($request, $categoriesTable->getDatabase(), $id);
             if (empty($errors)) {
                 $categoriesTable->update($id, $category);
                 $this->flash('success', 'La catégorie a bien été modifiée');
@@ -78,20 +79,21 @@ class CategoriesController extends Controller
      * Valide les données.
      *
      * @param ServerRequestInterface $request
-     * @param CategoriesTable        $categoriesTable
+     * @param Database               $database
      * @param int|null               $categoryId
      *
      * @return array|bool
      */
-    private function validates(ServerRequestInterface $request, CategoriesTable $categoriesTable, ?int $categoryId = null): array
+    private function validates(ServerRequestInterface $request, Database $database, ?int $categoryId = null): array
     {
         $params = $request->getParsedBody();
-        $validator = (new Validator($params))
+
+        return (new Validator($params))
+            ->setDatabase($database)
             ->required('name', 'slug')
             ->slug('slug')
-            ->unique('slug', $categoriesTable, $categoryId)
-            ->minLength('name', 4);
-
-        return $validator->getErrors();
+            ->unique('slug', 'categories', $categoryId)
+            ->minLength('name', 4)
+            ->getErrors();
     }
 }

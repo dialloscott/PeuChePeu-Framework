@@ -1,15 +1,22 @@
 <?php
+namespace Tests\App\Auth;
+
+use App\Auth\AuthService;
+use App\Auth\Entity\User;
+use App\Auth\Table\UserTable;
+use Core\Database\Database;
+use Core\Session\Session;
 
 class AuthServiceTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
-     * @var App\Auth\AuthService
+     * @var AuthService
      */
     private $auth;
 
     /**
-     * @var \App\Auth\Entity\User
+     * @var User
      */
     private $user;
 
@@ -25,16 +32,16 @@ class AuthServiceTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->session = new Core\Session\Session();
-        $this->user = new \App\Auth\Entity\User();
+        $this->session = new Session();
+        $this->user = new User();
         $this->user->id = 3;
         $this->user->password = password_hash('0000', PASSWORD_DEFAULT);
         $this->table = $this
-            ->getMockBuilder(\App\Auth\Table\UserTable::class)
-            ->setConstructorArgs([new Core\Database\Database('fake')])
+            ->getMockBuilder(UserTable::class)
+            ->setConstructorArgs([new Database('fake')])
             ->setMethods(['findByUsername', 'find'])
             ->getMock();
-        $this->auth = new \App\Auth\AuthService($this->table, $this->session);
+        $this->auth = new AuthService($this->table, $this->session);
     }
 
     public function tearDown()

@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Core\Database\Database;
 use Core\Database\Table;
 use DateTime;
 use Psr\Http\Message\UploadedFileInterface;
@@ -20,6 +21,11 @@ class Validator
      * @var array Stocke les erreurs de validation
      */
     private $errors = [];
+
+    /**
+     * @var Database
+     */
+    private $database;
 
     /**
      * @var array
@@ -118,6 +124,13 @@ class Validator
         return $this;
     }
 
+    /**
+     * Vérifie si le fichier a bien été uploadé.
+     *
+     * @param $key
+     *
+     * @return Validator
+     */
     public function uploaded($key): Validator
     {
         /** @var UploadedFileInterface $file */
@@ -129,6 +142,14 @@ class Validator
         return $this;
     }
 
+    /**
+     * Vérifie si l'extension du fichier est correcte.
+     *
+     * @param $key
+     * @param array $extensions
+     *
+     * @return Validator
+     */
     public function extension($key, array $extensions): Validator
     {
         /** @var UploadedFileInterface $file */
@@ -147,18 +168,50 @@ class Validator
         return $this;
     }
 
-    public function unique($key, Table $table, ?int $id = null): Validator
+    /**
+     * Vérifie que le champs est unique dans la table.
+     *
+     * @param $key
+     * @param string   $table
+     * @param int|null $id    Id de l'élément à ne pas prendre en compte (lui-même)
+     *
+     * @return Validator
+     */
+    public function unique($key, string $table, ?int $id = null): Validator
     {
         $value = $this->getValue($key);
-        $query = 'SELECT COUNT(id) FROM ' . $table::TABLE . " WHERE $key = ?";
+        $query = 'SELECT id FROM ' . $table . " WHERE $key = ?";
         $params = [$value];
         if ($id) {
             $query .= ' AND id != ?';
             $params[] = $id;
         }
-        $count = (int) $table->getDatabase()->fetchColumn($query, $params);
-        if ($count !== 0) {
+        if (!empty($this->database->fetchColumn($query, $params))) {
             $this->errors[$key] = 'Cette valeur est déjà utilisée';
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vérifie si un enregistrement existe dans la table indiquée.
+     *
+     * @param $key
+     * @param string $table
+     *
+     * @return Validator
+     */
+    public function exists($key, string $table): Validator
+    {
+        $value = $this->getValue($key);
+        if (!$value) {
+            $this->errors[$key] = 'Aucun enregistrement ne correspond à cet ID';
+
+            return $this;
+        }
+        $query = 'SELECT id FROM ' . $table . ' WHERE id = ?';
+        if (empty($this->database->fetchColumn($query, [$value]))) {
+            $this->errors[$key] = 'Aucun enregistrement ne correspond à cet ID';
         }
 
         return $this;
@@ -186,5 +239,17 @@ class Validator
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * @param Database $database
+     *
+     * @return Validator
+     */
+    public function setDatabase(Database $database): Validator
+    {
+        $this->database = $database;
+
+        return $this;
     }
 }
