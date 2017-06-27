@@ -5,10 +5,10 @@ namespace Core\View;
 use Core\Twig\CsrfExtension;
 use Core\Twig\ModuleExtension;
 use Core\Twig\PagerfantaExtension;
+use Core\Twig\RouterExtension;
 use Core\Twig\TextExtension;
 use Knlv\Slim\Views\TwigMessages;
 use Slim\Flash\Messages;
-use Slim\Views\TwigExtension;
 
 /**
  * Class View
@@ -27,7 +27,7 @@ class TwigView implements ViewInterface
     private $twig;
 
     public function __construct(
-        TwigExtension $slimExtension,
+        RouterExtension $routerExtension,
         ModuleExtension $moduleExtension,
         PagerfantaExtension $pagerfantaExtension,
         CsrfExtension $csrfExtension,
@@ -39,7 +39,7 @@ class TwigView implements ViewInterface
         ]);
         // Ajout des extensions
         $this->twig->addExtension($moduleExtension);
-        $this->twig->addExtension($slimExtension);
+        $this->twig->addExtension($routerExtension);
         $this->twig->addExtension($pagerfantaExtension);
         $this->twig->addExtension($csrfExtension);
         $this->twig->addExtension(new TwigMessages($flashMessages));

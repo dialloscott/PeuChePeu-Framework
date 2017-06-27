@@ -13,7 +13,7 @@ $seeders = [];
 foreach ($modules as $module) {
     $reflexion = new ReflectionClass($module);
     $migrations[] = $reflexion->getConstant('MIGRATIONS');
-    $seeds[] = $reflexion->getConstant('SEEDS');
+    $seeders[] = $reflexion->getConstant('SEEDS');
 }
 
 return [

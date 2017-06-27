@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Blog\Controller;
+namespace App\Blog\Controller\Admin;
 
-use App\Blog\PostTable;
 use App\Blog\PostUpload;
+use App\Blog\Table\PostTable;
 use Core\Controller;
 use Core\Validator;
 use Psr\Http\Message\ResponseInterface;
@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Http\Request;
 
-class AdminBlogController extends Controller
+class BlogController extends Controller
 {
     public function index(PostTable $postTable, Request $request): string
     {
@@ -21,64 +21,54 @@ class AdminBlogController extends Controller
         return $this->render('@blog/admin/index', compact('posts'));
     }
 
-    public function create()
+    public function create(ServerRequestInterface $request, PostTable $postTable, PostUpload $uploader)
     {
         $post = [
             'created_at' => date('Y-m-d H:i:s')
         ];
 
-        return $this->render('@blog/admin/create', ['post' => $post]);
-    }
+        if ($request->getMethod() === 'POST') {
+            $post = $this->getParams($request);
+            $errors = $this->validates($request, $postTable);
 
-    public function store(ServerRequestInterface $request, PostTable $postTable, PostUpload $uploader)
-    {
-        $post = $this->getParams($request);
-        $errors = $this->validates($request, $postTable);
+            if (empty($errors)) {
+                $post['image'] = $uploader->upload($request->getUploadedFiles()['image']);
+                $postTable->create($post);
+                $this->flash('success', "L'article a bien été créé");
 
-        if (empty($errors)) {
-            $post['image'] = $uploader->upload($request->getUploadedFiles()['image']);
-            $postTable->create($post);
-            $this->flash('success', "L'article a bien été créé");
-
-            return $this->redirect('blog.admin.index');
+                return $this->redirect('blog.admin.index');
+            }
         }
 
         return $this->render('@blog/admin/create', compact('post', 'errors'));
     }
 
-    public function edit(int $id, PostTable $postTable): string
+    public function edit(int $id, ServerRequestInterface $request, PostTable $postTable, PostUpload $uploader)
     {
         $post = $postTable->findOrFail($id);
 
-        return $this->render('@blog/admin/edit', compact('post'));
-    }
+        if ($request->getMethod() === 'PUT') {
+            $postEntity = $post;
+            $post = $this->getParams($request);
+            $errors = $this->validates($request, $postTable, $id);
 
-    public function update(int $id, ServerRequestInterface $request, PostTable $postTable, PostUpload $uploader)
-    {
-        $post = $postTable->findOrFail($id);
-        $postParams = $this->getParams($request);
-        $errors = $this->validates($request, $postTable, $id);
+            if (empty($errors)) {
+                /* @var UploadedFileInterface $file */
+                $file = $request->getUploadedFiles()['image'];
 
-        if (empty($errors)) {
-            /* @var UploadedFileInterface $file */
-            $file = $request->getUploadedFiles()['image'];
+                if ($file && $file->getError() === UPLOAD_ERR_OK) {
+                    $post['image'] = $uploader->upload($file, $postEntity->image);
+                }
 
-            if ($file && $file->getError() === UPLOAD_ERR_OK) {
-                $image = $uploader->upload($file, $post->image);
-                $postParams['image'] = $image;
+                // On met à jour la table
+                $postTable->update($id, $post);
+                $this->flash('success', "L'article a bien été modifié");
+
+                return $this->redirect('blog.admin.index');
             }
-
-            // On met à jour la table
-            $postTable->update($id, $postParams);
-            $this->flash('success', "L'article a bien été modifié");
-
-            return $this->redirect('blog.admin.index');
         }
 
-        return $this->render('@blog/admin/edit', [
-            'post'   => $postParams,
-            'errors' => $errors
-        ]);
+        return $this->render('@blog/admin/edit', compact('post', 'errors'));
     }
 
     public function destroy(int $id, PostTable $postTable, PostUpload $uploader): ResponseInterface
@@ -106,9 +96,9 @@ class AdminBlogController extends Controller
     /**
      * Valide les données.
      *
-     * @param ServerRequestInterface $request
-     * @param PostTable              $postTable
-     * @param int|null               $postId
+     * @param ServerRequestInterface    $request
+     * @param \App\Blog\Table\PostTable $postTable
+     * @param int|null                  $postId
      *
      * @return array|bool
      */

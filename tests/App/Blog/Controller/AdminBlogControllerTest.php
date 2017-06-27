@@ -2,23 +2,23 @@
 class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @var \App\Blog\Controller\AdminBlogController
+     * @var \App\Blog\Controller\Admin\BlogController
      */
     private $controller;
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function setUp()
     {
         $this->uploader = $this->getMockBuilder(\App\Blog\PostUpload::class)
             ->disableOriginalConstructor()
             ->setMethods(['upload', 'delete'])
             ->getMock();
 
-        $this->controller = $this->getMockBuilder(\App\Blog\Controller\AdminBlogController::class)
+        $this->controller = $this->getMockBuilder(\App\Blog\Controller\Admin\BlogController::class)
             ->disableOriginalConstructor()
             ->setMethods(['render', 'redirect', 'flash'])
             ->getMock();
 
-        $this->table = $this->getMockBuilder(\App\Blog\PostTable::class)
+        $this->table = $this->getMockBuilder(\App\Blog\Table\PostTable::class)
             ->disableOriginalConstructor()
             ->setMethodsExcept([])
             ->getMock();
@@ -28,15 +28,17 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
         $this->entity = new \App\Blog\PostEntity();
         $this->entity->id = 2;
         $this->table->method('find')->willReturn($this->entity);
-
-        parent::__construct($name, $data, $dataName);
     }
 
-    public function makeRequest (array $params = [], array $files = []) {
+    public function makeRequest (string $method = 'GET', array $params = [], array $files = []) {
         $request = $this->getMockBuilder(\Psr\Http\Message\ServerRequestInterface::class)
             ->disableOriginalConstructor()
             ->setMethodsExcept([])
             ->getMock();
+        $request
+            ->expects($this->any())
+            ->method('getMethod')
+            ->willReturn($method);
         $request
             ->expects($this->any())
             ->method('getParsedBody')
@@ -45,10 +47,6 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
             ->expects($this->any())
             ->method('getUploadedFiles')
             ->willReturn($files);
-        $request
-            ->expects($this->any())
-            ->method('getMethod')
-            ->willReturn('POST');
 
         return $request;
     }
@@ -67,7 +65,7 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
             ->method('render')
             ->with('@blog/admin/edit');
 
-        $this->controller->update(3, $this->makeRequest(), $this->table, $this->uploader);
+        $this->controller->edit(3, $this->makeRequest('PUT'), $this->table, $this->uploader);
     }
 
     public function testEditWithGoodParams () {
@@ -94,7 +92,7 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
             'slug' => 'azeeaz-azeaze'
         ];
 
-        $this->controller->update(3, $this->makeRequest($params, ['image' => $file]), $this->table, $this->uploader);
+        $this->controller->edit(3, $this->makeRequest('PUT', $params, ['image' => $file]), $this->table, $this->uploader);
     }
 
 }

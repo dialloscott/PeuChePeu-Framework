@@ -61,7 +61,7 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 - [x] Upload d'un fichier à la une
 - [x] Gestion du slug (check unicité)
 - [x] Création de miniature pour les images des articles
-- [ ] Ajout des catégories
+- [x] Ajout des catégories
 - [ ] Page contact (permet de voir le traitement des formulaire)
 
 ### Module compte utilisateur

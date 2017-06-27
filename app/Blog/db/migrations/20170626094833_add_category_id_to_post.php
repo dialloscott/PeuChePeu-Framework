@@ -33,6 +33,5 @@ class AddCategoryIdToPost extends AbstractMigration
                 'delete' => 'SET_NULL'
             ])
             ->update();
-
     }
 }

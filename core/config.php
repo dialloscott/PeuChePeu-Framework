@@ -14,10 +14,9 @@ return [
     \Slim\Interfaces\RouterInterface::class      => \DI\object(\Slim\Router::class),
 
     // Vue
-    \Slim\Views\TwigExtension::class             => \DI\object()->constructor(
-        \DI\get('router'),
-        \DI\get('request')
-    ),
+    \Core\Twig\RouterExtension::class             => function (\Psr\Container\ContainerInterface $c) {
+        return new \Core\Twig\RouterExtension($c->get('router'), $c->get('request')->getUri());
+    },
     \Core\View\ViewInterface::class              => \DI\object(\Core\View\TwigView::class),
 
     // Session

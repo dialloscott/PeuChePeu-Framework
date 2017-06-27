@@ -2,8 +2,6 @@
 
 namespace Core\Database;
 
-use App\Blog\PostEntity;
-
 /**
  * Représente une table en base de données.
  */
@@ -129,10 +127,11 @@ class Table
     }
 
     /**
-     * Récupère les données paginées
+     * Récupère les données paginées.
      *
      * @param int $perPage
      * @param int $currentPage
+     *
      * @return \Pagerfanta\Pagerfanta
      */
     public function findPaginated($perPage = 10, $currentPage = 1)
@@ -142,7 +141,7 @@ class Table
 
         return (new PaginatedQuery(
             $this->database,
-            'SELECT * FROM ' . $table,
+            'SELECT * FROM ' . $table . ' ORDER BY id DESC',
             $count,
             static::ENTITY
         ))

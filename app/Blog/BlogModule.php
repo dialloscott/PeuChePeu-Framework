@@ -2,8 +2,8 @@
 
 namespace App\Blog;
 
-use App\Blog\Controller\Admin\CategoriesController;
-use App\Blog\Controller\AdminBlogController;
+use App\Blog\Controller\Admin\BlogController as AdminBlogController;
+use App\Blog\Controller\Admin\CategoriesController as AdminCategoriesController;
 use App\Blog\Controller\BlogController;
 use Core\App;
 use Core\Module;
@@ -29,26 +29,20 @@ class BlogModule extends Module
             $app->group($container->get('admin.prefix'), function () {
                 // Gestion des articles
                 $this->get('/blog', [AdminBlogController::class, 'index'])->setName('blog.admin.index');
-                $this->get('/blog/new', [AdminBlogController::class, 'create'])->setName('blog.admin.create');
-                $this->get('/blog/{id:[0-9]+}', [AdminBlogController::class, 'edit'])->setName('blog.admin.edit');
-                $this->put('/blog/{id:[0-9]+}', [AdminBlogController::class, 'update']);
-                $this->post('/blog/new', [AdminBlogController::class, 'store']);
+                $this->map(['GET', 'POST'], '/blog/new', [AdminBlogController::class, 'create'])->setName('blog.admin.create');
+                $this->map(['GET', 'PUT'], '/blog/{id:[0-9]+}', [AdminBlogController::class, 'edit'])->setName('blog.admin.edit');
                 $this
                     ->delete('/blog/{id:[0-9]+}', [AdminBlogController::class, 'destroy'])
                     ->setName('blog.admin.destroy');
 
                 // Gestion des categories
-                $this->get('/categories', [CategoriesController::class, 'index'])->setName('blog.admin.category.index');
-                $this->get('/categories/new', [CategoriesController::class, 'create'])->setName('blog.admin.category.create');
-                $this->get('/categories/{id:[0-9]+}', [CategoriesController::class, 'edit'])->setName('blog.admin.category.edit');
-                $this->put('/categories/{id:[0-9]+}', [CategoriesController::class, 'update']);
-                $this->post('/categories/new', [CategoriesController::class, 'store']);
+                $this->get('/categories', [AdminCategoriesController::class, 'index'])->setName('blog.admin.category.index');
+                $this->map(['GET', 'POST'], '/categories/new', [AdminCategoriesController::class, 'create'])->setName('blog.admin.category.create');
+                $this->map(['GET', 'PUT'], '/categories/{id:[0-9]+}', [AdminCategoriesController::class, 'edit'])->setName('blog.admin.category.edit');
                 $this
-                    ->delete('/categories/{id:[0-9]+}', [CategoriesController::class, 'destroy'])
+                    ->delete('/categories/{id:[0-9]+}', [AdminCategoriesController::class, 'destroy'])
                     ->setName('blog.admin.category.destroy');
-
             })->add($container->get('admin.middleware'));
-
         }
 
         // Gestion du widget
