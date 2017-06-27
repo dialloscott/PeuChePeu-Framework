@@ -2,7 +2,6 @@
 
 namespace App\Blog;
 
-use Imagine\Gd\Imagine;
 use Intervention\Image\ImageManager;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -16,7 +15,8 @@ class PostUpload
     private $path;
 
     /**
-     * Liste les formats à générer
+     * Liste les formats à générer.
+     *
      * @var array
      */
     private $formats = [
@@ -119,14 +119,17 @@ class PostUpload
     }
 
     /**
-     * Renvoie le nom du fichier avec le format en suffix
+     * Renvoie le nom du fichier avec le format en suffix.
      *
      * @param string $name
      * @param string $format
+     *
      * @return string
      */
-    private function getFilenameForFormat(string $name, string $format): string {
+    private function getFilenameForFormat(string $name, string $format): string
+    {
         ['filename' => $filename, 'extension' => $extension] = pathinfo($name);
+
         return $filename . '_' . $format . '.' . $extension;
     }
 }

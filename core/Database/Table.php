@@ -2,6 +2,8 @@
 
 namespace Core\Database;
 
+use App\Blog\PostEntity;
+
 /**
  * Représente une table en base de données.
  */
@@ -124,5 +126,28 @@ class Table
     public function getDatabase(): Database
     {
         return $this->database;
+    }
+
+    /**
+     * Récupère les données paginées
+     *
+     * @param int $perPage
+     * @param int $currentPage
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function findPaginated($perPage = 10, $currentPage = 1)
+    {
+        $table = static::TABLE;
+        $count = $this->database->fetchColumn('SELECT COUNT(id) FROM ' . $table);
+
+        return (new PaginatedQuery(
+            $this->database,
+            'SELECT * FROM ' . $table,
+            $count,
+            static::ENTITY
+        ))
+            ->getPaginator()
+            ->setCurrentPage($currentPage)
+            ->setMaxPerPage($perPage);
     }
 }

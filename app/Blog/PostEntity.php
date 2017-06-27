@@ -16,8 +16,10 @@ class PostEntity
 
     public $image;
 
-    public function getThumb () {
+    public function getThumb()
+    {
         ['filename' => $filename, 'extension' => $extension] = pathinfo($this->image);
+
         return '/uploads/posts/' . $filename . '_thumb.' . $extension;
     }
 }

@@ -30,9 +30,9 @@ class PaginatedQuery implements AdapterInterface
     private $entity;
 
     /**
-     * @param Database $database
-     * @param string $query
-     * @param int $count
+     * @param Database    $database
+     * @param string      $query
+     * @param int         $count
      * @param null|string $entity
      */
     public function __construct(Database $database, string $query, int $count, ?string $entity = null)

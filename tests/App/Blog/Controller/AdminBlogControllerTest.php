@@ -33,7 +33,7 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function makeRequest (array $params = [], array $files = []) {
-        $request = $this->getMockBuilder(\Slim\Http\Request::class)
+        $request = $this->getMockBuilder(\Psr\Http\Message\ServerRequestInterface::class)
             ->disableOriginalConstructor()
             ->setMethodsExcept([])
             ->getMock();
@@ -50,8 +50,7 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
             ->method('getMethod')
             ->willReturn('POST');
 
-        $blogRequest = new \App\Blog\Request\BlogRequest($request, $this->table);
-        return $blogRequest;
+        return $request;
     }
 
     public function makeFile () {
@@ -68,7 +67,7 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
             ->method('render')
             ->with('@blog/admin/edit');
 
-        $this->controller->update(3, $this->table, $this->makeRequest(), $this->uploader);
+        $this->controller->update(3, $this->makeRequest(), $this->table, $this->uploader);
     }
 
     public function testEditWithGoodParams () {
@@ -95,9 +94,7 @@ class AdminBlogControllerTest extends \PHPUnit\Framework\TestCase {
             'slug' => 'azeeaz-azeaze'
         ];
 
-        var_dump('ok', date('Y-m-d H:i:s'));
-
-        $this->controller->update(3, $this->table, $this->makeRequest($params, ['image' => $file]), $this->uploader);
+        $this->controller->update(3, $this->makeRequest($params, ['image' => $file]), $this->table, $this->uploader);
     }
 
 }

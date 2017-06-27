@@ -60,7 +60,7 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 - [x] Back office pour la gestion des articles
 - [x] Upload d'un fichier à la une
 - [x] Gestion du slug (check unicité)
-- [ ] Création de miniature pour les images des articles
+- [x] Création de miniature pour les images des articles
 - [ ] Ajout des catégories
 - [ ] Page contact (permet de voir le traitement des formulaire)
 

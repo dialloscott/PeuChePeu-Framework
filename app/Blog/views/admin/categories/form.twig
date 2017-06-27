@@ -1,0 +1,3 @@
+{{ csrf_input() }}
+{% include 'shared/input.twig' with {key: 'name', label: "Titre", value: category.name} %}
+{% include 'shared/input.twig' with {key: 'slug', label: "Slug", value: category.slug} %}

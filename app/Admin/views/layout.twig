@@ -17,9 +17,14 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             {% if has_module('blog') %}
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="{{ path_for('blog.admin.index') }}">
                         Blog
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path_for('blog.admin.category.index') }}">
+                        Catégorie
                     </a>
                 </li>
             {% endif %}

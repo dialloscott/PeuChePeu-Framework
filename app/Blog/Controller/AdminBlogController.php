@@ -4,9 +4,10 @@ namespace App\Blog\Controller;
 
 use App\Blog\PostTable;
 use App\Blog\PostUpload;
-use App\Blog\Request\BlogRequest;
 use Core\Controller;
+use Core\Validator;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Http\Request;
 
@@ -29,30 +30,20 @@ class AdminBlogController extends Controller
         return $this->render('@blog/admin/create', ['post' => $post]);
     }
 
-    public function store(BlogRequest $blogRequest, PostTable $postTable, PostUpload $uploader)
+    public function store(ServerRequestInterface $request, PostTable $postTable, PostUpload $uploader)
     {
-        $post = $blogRequest->getParams();
+        $post = $this->getParams($request);
+        $errors = $this->validates($request, $postTable);
 
-        if ($blogRequest->validates()) {
-            /* @var $files UploadedFileInterface[] */
-            $files = $blogRequest->getRequest()->getUploadedFiles();
-
-            // Upload du fichier
-            $post['image'] = $uploader->upload($files['image']);
-
-            // On persiste l'article
+        if (empty($errors)) {
+            $post['image'] = $uploader->upload($request->getUploadedFiles()['image']);
             $postTable->create($post);
-
-            // Message de succès
             $this->flash('success', "L'article a bien été créé");
 
             return $this->redirect('blog.admin.index');
         }
 
-        return $this->render('@blog/admin/create', [
-            'post'   => $post,
-            'errors' => $blogRequest->getErrors()
-        ]);
+        return $this->render('@blog/admin/create', compact('post', 'errors'));
     }
 
     public function edit(int $id, PostTable $postTable): string
@@ -62,13 +53,15 @@ class AdminBlogController extends Controller
         return $this->render('@blog/admin/edit', compact('post'));
     }
 
-    public function update(int $id, PostTable $postTable, BlogRequest $blogRequest, PostUpload $uploader)
+    public function update(int $id, ServerRequestInterface $request, PostTable $postTable, PostUpload $uploader)
     {
         $post = $postTable->findOrFail($id);
-        $postParams = $blogRequest->getParams();
-        if ($blogRequest->validates($id)) {
+        $postParams = $this->getParams($request);
+        $errors = $this->validates($request, $postTable, $id);
+
+        if (empty($errors)) {
             /* @var UploadedFileInterface $file */
-            $file = $blogRequest->getRequest()->getUploadedFiles()['image'];
+            $file = $request->getUploadedFiles()['image'];
 
             if ($file && $file->getError() === UPLOAD_ERR_OK) {
                 $image = $uploader->upload($file, $post->image);
@@ -81,11 +74,10 @@ class AdminBlogController extends Controller
 
             return $this->redirect('blog.admin.index');
         }
-        $postParams = $blogRequest->getParams();
 
         return $this->render('@blog/admin/edit', [
             'post'   => $postParams,
-            'errors' => $blogRequest->getErrors()
+            'errors' => $errors
         ]);
     }
 
@@ -97,5 +89,45 @@ class AdminBlogController extends Controller
         $this->flash('success', "L'article a bien été supprimé");
 
         return $this->redirect('blog.admin.index');
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return array
+     */
+    private function getParams(ServerRequestInterface $request): array
+    {
+        return array_filter($request->getParsedBody(), function ($key) {
+            return in_array($key, ['name', 'content', 'created_at', 'slug'], true);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * Valide les données.
+     *
+     * @param ServerRequestInterface $request
+     * @param PostTable              $postTable
+     * @param int|null               $postId
+     *
+     * @return array|bool
+     */
+    private function validates(ServerRequestInterface $request, PostTable $postTable, ?int $postId = null): array
+    {
+        $params = array_merge($request->getParsedBody(), $request->getUploadedFiles());
+        $validator = (new Validator($params))
+            ->required('name', 'content', 'created_at', 'image', 'slug')
+            ->slug('slug')
+            ->unique('slug', $postTable, $postId)
+            ->minLength('name', 4)
+            ->minLength('content', 20)
+            ->dateTime('created_at')
+            ->extension('image', ['jpg', 'png']);
+
+        if ($request->getMethod() === 'POST') {
+            $validator->uploaded('image');
+        }
+
+        return $validator->getErrors();
     }
 }

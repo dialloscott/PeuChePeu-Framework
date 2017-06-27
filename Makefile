@@ -27,7 +27,7 @@ seed: install ## Lance le seeding de la base de données
 # Test & Linters
 #############
 lint: vendor ## Vérifie le code
-	./vendor/bin/phpcs && \
+	./vendor/bin/phpcs -s && \
 	./vendor/bin/php-cs-fixer fix --diff --dry-run -v
 
 lint.fix: vendor ## Vérifie le code et le corrige tout seul

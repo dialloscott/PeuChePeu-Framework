@@ -7,7 +7,7 @@ return [
     'basepath'                                   => dirname(__DIR__),
     'settings.displayErrorDetails'               => true,
     'settings.routerCacheFile'                   => false,
-    'settings.determineRouteBeforeAppMiddleware' => false,
+    'settings.determineRouteBeforeAppMiddleware' => true,
     'errorHandler'                               => \DI\object(\Core\Handler::class),
 
     // Misc
@@ -23,7 +23,8 @@ return [
     // Session
     'session'                                    => \Di\get(\Core\Session\SessionInterface::class),
     \Core\Session\SessionInterface::class        => \DI\object(\Core\Session\Session::class),
-    \Slim\Flash\Messages::class                  => \DI\object(\Slim\Flash\Messages::class)->constructor(\DI\get('session')),
+    \Slim\Flash\Messages::class                  => \DI\object(\Slim\Flash\Messages::class)
+                                                        ->constructor(\DI\get('session')),
 
     // CSRF
     'csrf.name'                                  => 'X-XSRF-TOKEN',

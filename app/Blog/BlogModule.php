@@ -2,6 +2,7 @@
 
 namespace App\Blog;
 
+use App\Blog\Controller\Admin\CategoriesController;
 use App\Blog\Controller\AdminBlogController;
 use App\Blog\Controller\BlogController;
 use Core\App;
@@ -26,13 +27,28 @@ class BlogModule extends Module
         // Pour le backend
         if ($container->has('admin.middleware')) {
             $app->group($container->get('admin.prefix'), function () {
+                // Gestion des articles
                 $this->get('/blog', [AdminBlogController::class, 'index'])->setName('blog.admin.index');
                 $this->get('/blog/new', [AdminBlogController::class, 'create'])->setName('blog.admin.create');
                 $this->get('/blog/{id:[0-9]+}', [AdminBlogController::class, 'edit'])->setName('blog.admin.edit');
                 $this->put('/blog/{id:[0-9]+}', [AdminBlogController::class, 'update']);
                 $this->post('/blog/new', [AdminBlogController::class, 'store']);
-                $this->delete('/blog/{id:[0-9]+}', [AdminBlogController::class, 'destroy'])->setName('blog.admin.destroy');
+                $this
+                    ->delete('/blog/{id:[0-9]+}', [AdminBlogController::class, 'destroy'])
+                    ->setName('blog.admin.destroy');
+
+                // Gestion des categories
+                $this->get('/categories', [CategoriesController::class, 'index'])->setName('blog.admin.category.index');
+                $this->get('/categories/new', [CategoriesController::class, 'create'])->setName('blog.admin.category.create');
+                $this->get('/categories/{id:[0-9]+}', [CategoriesController::class, 'edit'])->setName('blog.admin.category.edit');
+                $this->put('/categories/{id:[0-9]+}', [CategoriesController::class, 'update']);
+                $this->post('/categories/new', [CategoriesController::class, 'store']);
+                $this
+                    ->delete('/categories/{id:[0-9]+}', [CategoriesController::class, 'destroy'])
+                    ->setName('blog.admin.category.destroy');
+
             })->add($container->get('admin.middleware'));
+
         }
 
         // Gestion du widget

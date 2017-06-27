@@ -14,11 +14,23 @@ class PostTable extends Table
     public const TABLE = 'posts';
     public const ENTITY = PostEntity::class;
 
+    /**
+     * Récupère les données paginées
+     *
+     * @param int $perPage
+     * @param int $currentPage
+     * @return \Pagerfanta\Pagerfanta
+     */
     public function findPaginated($perPage = 10, $currentPage = 1)
     {
         $count = $this->database->fetchColumn('SELECT COUNT(id) FROM posts');
 
-        return (new PaginatedQuery($this->database, 'SELECT * FROM posts ORDER BY created_at DESC', $count, PostEntity::class))
+        return (new PaginatedQuery(
+            $this->database,
+            'SELECT * FROM posts ORDER BY created_at DESC',
+            $count,
+            PostEntity::class
+        ))
             ->getPaginator()
             ->setCurrentPage($currentPage)
             ->setMaxPerPage($perPage);
