@@ -1,72 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <style>
-        body {
-            padding-top: 5rem;
-        }
-    </style>
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <style>
+    body {
+      padding-top: 5rem;
+    }
+  </style>
 </head>
 <body>
 
 <nav class="navbar  navbar-toggleable-md fixed-top navbar-inverse bg-inverse">
-    <a class="navbar-brand" href="#">Mon application</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            {% if has_module('blog') %}
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ path_for('blog.index') }}">Blog <span class="sr-only">(current)</span></a>
+  <a class="navbar-brand" href="#">Mon application</a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      {% if has_module('blog') %}
+        <li class="nav-item {% if path_child_of('blog.index') %}active{% endif %}">
+          <a class="nav-link" href="{{ path_for('blog.index') }}">Blog <span class="sr-only">(current)</span></a>
+        </li>
+      {% endif %}
+      {% if has_module('contact') %}
+        <li class="nav-item {% if path_child_of('contact') %}active{% endif %}">
+          <a class="nav-link" href="{{ path_for('contact') }}">Contact</a>
+        </li>
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav">
+      {% if has_module('auth') %}
+        {% if current_user() %}
+          {% if has_module('admin') and has_role('admin') %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path_for('admin.index') }}">Administration</a>
             </li>
-            {% endif %}
-        </ul>
-        <ul class="navbar-nav">
-            {% if has_module('auth') %}
-                {% if current_user() %}
-                    {% if has_module('admin') and has_role('admin') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path_for('admin.index') }}">Administration</a>
-                        </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <form action="{{ path_for('auth.logout') }}" method="post">
-                            <input type="hidden" name="_METHOD" value="DELETE">
-                            {{ csrf_input() }}
-                            <button class="nav-link btn btn-danger" type="submit">Se
-                                déconnecter</button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ path_for('auth.login') }}">Se connecter</a>
-                    </li>
-                {% endif %}
-            </li>
-            {% endif %}
-        </ul>
-    </div>
+          {% endif %}
+          <li class="nav-item">
+            <form action="{{ path_for('auth.logout') }}" method="post">
+              <input type="hidden" name="_METHOD" value="DELETE">
+              {{ csrf_input() }}
+              <button class="nav-link btn btn-danger" type="submit">Se
+                déconnecter
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ path_for('auth.login') }}">Se connecter</a>
+          </li>
+        {% endif %}
+        </li>
+      {% endif %}
+    </ul>
+  </div>
 </nav>
 
 <div class="container">
 
-    {% if flash('error') %}
+  {% if flash('error') %}
     <div class="alert alert-danger">
-        {% for msg in flash('error') %}
+      {% for msg in flash('error') %}
         {{ msg }}
-        {% endfor %}
+      {% endfor %}
     </div>
-    {% endif %}
+  {% endif %}
 
-    {% if flash('success') %}
-        <div class="alert alert-success">
-            {% for msg in flash('success') %}
-                {{ msg }}
-            {% endfor %}
-        </div>
-    {% endif %}
+  {% if flash('success') %}
+    <div class="alert alert-success">
+      {% for msg in flash('success') %}
+        {{ msg }}
+      {% endfor %}
+    </div>
+  {% endif %}
 
-    {% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 
 </div><!-- /.container -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
@@ -75,7 +82,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.locales.min.js"></script>
 <script>
-  timeago().render(document.querySelectorAll('.timeago'), 'fr');
+  timeago().render(document.querySelectorAll('.timeago'), 'fr')
 </script>
 </body>
 </html>

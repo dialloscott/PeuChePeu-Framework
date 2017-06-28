@@ -1,0 +1,17 @@
+{% extends('layout.twig') %}
+
+{% block title %}Me contacter{% endblock %}
+
+{% block content %}
+
+  <h1>Me contacter</h1>
+
+  <form action="#" method="post" enctype="multipart/form-data">
+    {{ csrf_input() }}
+    {% include 'shared/input.twig' with {key: 'name', label: "Votre nom", value: message.name} %}
+    {% include 'shared/input.twig' with {type: 'email', key: 'email', label: "Votre email", value: message.email} %}
+    {% include 'shared/input.twig' with {type: 'textarea', key: 'message', label: "Votre message", value: message.message} %}
+    <button class="btn btn-primary">Me contacter</button>
+  </form>
+
+{% endblock %}

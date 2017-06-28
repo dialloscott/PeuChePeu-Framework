@@ -42,9 +42,9 @@ class Validator
      *
      * @param string[] ...$keys
      *
-     * @return Validator
+     * @return self
      */
-    public function required(string ...$keys): Validator
+    public function required(string ...$keys): self
     {
         foreach ($keys as $key) {
             if (!isset($this->params[$key]) || empty($this->params[$key])) {
@@ -60,9 +60,9 @@ class Validator
      *
      * @param $key
      *
-     * @return Validator
+     * @return self
      */
-    public function dateTime($key): Validator
+    public function dateTime($key): self
     {
         $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $this->getValue($key));
         $errors = DateTime::getLastErrors();
@@ -79,9 +79,9 @@ class Validator
      * @param $key
      * @param int $length
      *
-     * @return Validator
+     * @return self
      */
-    public function minLength($key, int $length): Validator
+    public function minLength($key, int $length): self
     {
         if (mb_strlen($this->getValue($key)) < $length) {
             $this->errors[$key] = "Vous ne pouvez pas écrire moins de $length caractères";
@@ -96,9 +96,9 @@ class Validator
      * @param $key
      * @param int $length
      *
-     * @return Validator
+     * @return self
      */
-    public function maxLength($key, int $length): Validator
+    public function maxLength($key, int $length): self
     {
         if (mb_strlen($this->getValue($key)) > $length) {
             $this->errors[$key] = "Vous ne pouvez pas écrire plus de $length caractères";
@@ -112,9 +112,9 @@ class Validator
      *
      * @param $key
      *
-     * @return Validator
+     * @return self
      */
-    public function slug($key): Validator
+    public function slug($key): self
     {
         $pattern = '/^([a-z0-9]+-?)+$/';
         if (!preg_match($pattern, $this->getValue($key))) {
@@ -129,9 +129,9 @@ class Validator
      *
      * @param $key
      *
-     * @return Validator
+     * @return self
      */
-    public function uploaded($key): Validator
+    public function uploaded($key): self
     {
         /** @var UploadedFileInterface $file */
         $file = $this->getValue($key);
@@ -148,9 +148,9 @@ class Validator
      * @param $key
      * @param array $extensions
      *
-     * @return Validator
+     * @return self
      */
-    public function extension($key, array $extensions): Validator
+    public function extension($key, array $extensions): self
     {
         /** @var UploadedFileInterface $file */
         $file = $this->getValue($key);
@@ -175,9 +175,9 @@ class Validator
      * @param string   $table
      * @param int|null $id    Id de l'élément à ne pas prendre en compte (lui-même)
      *
-     * @return Validator
+     * @return self
      */
-    public function unique($key, string $table, ?int $id = null): Validator
+    public function unique($key, string $table, ?int $id = null): self
     {
         $value = $this->getValue($key);
         $query = 'SELECT id FROM ' . $table . " WHERE $key = ?";
@@ -199,9 +199,9 @@ class Validator
      * @param $key
      * @param string $table
      *
-     * @return Validator
+     * @return self
      */
-    public function exists($key, string $table): Validator
+    public function exists($key, string $table): self
     {
         $value = $this->getValue($key);
         if (!$value) {
@@ -212,6 +212,23 @@ class Validator
         $query = 'SELECT id FROM ' . $table . ' WHERE id = ?';
         if (empty($this->database->fetchColumn($query, [$value]))) {
             $this->errors[$key] = 'Aucun enregistrement ne correspond à cet ID';
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vérifie qu'un email est valide.
+     *
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function email(string $key): self
+    {
+        $value = $this->getValue($key);
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            $this->errors[$key] = 'Cet email ne semble pas valide';
         }
 
         return $this;
@@ -244,9 +261,9 @@ class Validator
     /**
      * @param Database $database
      *
-     * @return Validator
+     * @return self
      */
-    public function setDatabase(Database $database): Validator
+    public function setDatabase(Database $database): self
     {
         $this->database = $database;
 

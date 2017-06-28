@@ -4,6 +4,7 @@ namespace Core;
 
 use Core\View\ViewInterface;
 use DI\Container;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Flash\Messages;
 use Slim\Http\Response;
@@ -22,9 +23,9 @@ class Controller
     /**
      * Controller constructor.
      *
-     * @param Container $container
+     * @param ContainerInterface $container
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }

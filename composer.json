@@ -11,7 +11,8 @@
     "autoload": {
         "psr-4": {
             "Core\\": "core/",
-            "App\\": "app/"
+            "App\\": "app/",
+            "Tests\\": "tests/"
         }
     },
     "require": {
@@ -24,7 +25,8 @@
         "slim/flash": "^0.2.0",
         "kanellov/slim-twig-flash": "^0.2.0",
         "schnittstabil/psr7-csrf-middleware": "^1.1",
-        "intervention/image": "^2.3"
+        "intervention/image": "^2.3",
+        "swiftmailer/swiftmailer": "^6.0"
     },
     "require-dev": {
         "digitalnature/php-ref": "^1.2",

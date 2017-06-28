@@ -4,7 +4,7 @@ use Schnittstabil\Psr7\Csrf\MiddlewareBuilder as CsrfMiddlewareBuilder;
 
 return [
     // Env
-    'dev'                                       => true,
+    'dev'                                        => true,
 
     // Chemins
     'basepath'                                   => dirname(__DIR__),
@@ -12,6 +12,7 @@ return [
     'settings.routerCacheFile'                   => false,
     'settings.determineRouteBeforeAppMiddleware' => true,
     'errorHandler'                               => \DI\object(\Core\Handler::class),
+    'upload_path'                                => \DI\string('{basepath}/public/uploads'),
 
     // Misc
     \Slim\Interfaces\RouterInterface::class      => \DI\object(\Slim\Router::class),
@@ -31,10 +32,11 @@ return [
     },
 
     // Session
-    'session'                                    => \Di\get(\Core\Session\SessionInterface::class),
-    \Core\Session\SessionInterface::class        => \DI\object(\Core\Session\Session::class),
-    \Slim\Flash\Messages::class                  => \DI\object(\Slim\Flash\Messages::class)
-        ->constructor(\DI\get('session')),
+    'session'                                    => \DI\object(\Core\Session\Session::class),
+    'session.flash'                              => \DI\object(\Slim\Flash\Messages::class)
+                                                        ->constructor(\DI\get('session')),
+    \Core\Session\SessionInterface::class        => \DI\get('session'),
+    \Slim\Flash\Messages::class                  => \DI\get('session.flash'),
 
     // CSRF
     'csrf.name'                                  => 'X-XSRF-TOKEN',
@@ -62,6 +64,11 @@ return [
     ),
     'db'                                         => \DI\get(\Core\Database\Database::class),
 
-    // Fichiers
-    'upload_path'                                => \DI\string('{basepath}/public/uploads'),
+    // Mailer
+    'mailer.webmaster'                           => 'demo@local.dev',
+    'mailer.transport'                           => \DI\object(Swift_SmtpTransport::class)
+                                                        ->constructor('localhost', 1025),
+    'mailer'                                     => \DI\object(Swift_Mailer::class)
+                                                        ->constructor(\DI\get('mailer.transport')),
+    Swift_Mailer::class                          => \DI\get('mailer')
 ];

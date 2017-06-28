@@ -12,7 +12,8 @@ $app = new \Core\App(
         \App\Base\BaseModule::class,
         \App\Admin\AdminModule::class,
         \App\Auth\AuthModule::class,
-        \App\Blog\BlogModule::class
+        \App\Blog\BlogModule::class,
+        \App\Contact\ContactModule::class
     ]
 );
 

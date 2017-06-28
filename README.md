@@ -62,7 +62,10 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 - [x] Gestion du slug (check unicité)
 - [x] Création de miniature pour les images des articles
 - [x] Ajout des catégories
-- [ ] Page contact (permet de voir le traitement des formulaire)
+- [x] Page contact (permet de voir le traitement des formulaire)
+
+- [ ] Page d'erreur personnalisée
+- [ ] Réactivatation du middleware Whoops
 
 ### Module compte utilisateur
 
@@ -82,7 +85,6 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 
 ## Participer ?
 
-Pour le moment je pose la base donc ne faites pas de PR avec de nouvelle fonctionnalité par contre si vous le 
-souhaitez vous pouvez critiquer le code existant et proposer des changements / refactor. Le but n'est pas de créer le prochain 
+La base est maintenant faite si vous le souhaitez vous pouvez critiquer le code existant et proposer des changements / refactor. Le but n'est pas de créer le prochain 
 Laravel / Symfony, mais de voir comment on peut créer une structure de projet simple avec PHP 7 et les librairies 
 actuellement disponibles dans l'écosystème PHP.
