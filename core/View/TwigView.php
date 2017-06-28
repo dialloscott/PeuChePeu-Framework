@@ -2,15 +2,6 @@
 
 namespace Core\View;
 
-use Core\Twig\CsrfExtension;
-use Core\Twig\ModuleExtension;
-use Core\Twig\PagerfantaExtension;
-use Core\Twig\RouterExtension;
-use Core\Twig\TextExtension;
-use Core\Twig\TimeExtension;
-use Knlv\Slim\Views\TwigMessages;
-use Slim\Flash\Messages;
-
 /**
  * Class View
  * Permet d'intéragir avec la gestion de template (ici Twig).
@@ -27,26 +18,16 @@ class TwigView implements ViewInterface
      */
     private $twig;
 
-    public function __construct(
-        RouterExtension $routerExtension,
-        ModuleExtension $moduleExtension,
-        PagerfantaExtension $pagerfantaExtension,
-        CsrfExtension $csrfExtension,
-        Messages $flashMessages,
-        TimeExtension $timeExtension
-    ) {
+    public function __construct(array $extensions, $cachePath)
+    {
         $this->loader = new \Twig_Loader_Filesystem();
         $this->twig = new \Twig_Environment($this->loader, [
-            'cache' => false
+            'cache' => $cachePath
         ]);
         // Ajout des extensions
-        $this->twig->addExtension($moduleExtension);
-        $this->twig->addExtension($routerExtension);
-        $this->twig->addExtension($pagerfantaExtension);
-        $this->twig->addExtension($csrfExtension);
-        $this->twig->addExtension($timeExtension);
-        $this->twig->addExtension(new TwigMessages($flashMessages));
-        $this->twig->addExtension(new TextExtension());
+        foreach ($extensions as $extension) {
+            $this->twig->addExtension($extension);
+        }
     }
 
     /**

@@ -3,6 +3,9 @@
 use Schnittstabil\Psr7\Csrf\MiddlewareBuilder as CsrfMiddlewareBuilder;
 
 return [
+    // Env
+    'dev'                                       => true,
+
     // Chemins
     'basepath'                                   => dirname(__DIR__),
     'settings.displayErrorDetails'               => true,
@@ -14,16 +17,24 @@ return [
     \Slim\Interfaces\RouterInterface::class      => \DI\object(\Slim\Router::class),
 
     // Vue
-    \Core\Twig\RouterExtension::class             => function (\Psr\Container\ContainerInterface $c) {
-        return new \Core\Twig\RouterExtension($c->get('router'), $c->get('request')->getUri());
+    'view.cache'                                 => \DI\string('{basepath}/tmp/views'),
+    \Core\View\ViewInterface::class              => function (\Psr\Container\ContainerInterface $c) {
+        return new \Core\View\TwigView([
+            new \Core\Twig\ModuleExtension($c->get('app')->getModules()),
+            new \Core\Twig\RouterExtension($c->get('router'), $c->get('request')->getUri()),
+            new \Core\Twig\PagerfantaExtension($c->get('router')),
+            new \Core\Twig\TimeExtension(),
+            new \Core\Twig\CsrfExtension($c->get('csrf.name'), $c->get('csrf')),
+            new \Knlv\Slim\Views\TwigMessages($c->get(\Slim\Flash\Messages::class)),
+            new \Core\Twig\TextExtension()
+        ], $c->get('dev') ? false : $c->get('view.cache'));
     },
-    \Core\View\ViewInterface::class              => \DI\object(\Core\View\TwigView::class),
 
     // Session
     'session'                                    => \Di\get(\Core\Session\SessionInterface::class),
     \Core\Session\SessionInterface::class        => \DI\object(\Core\Session\Session::class),
     \Slim\Flash\Messages::class                  => \DI\object(\Slim\Flash\Messages::class)
-                                                        ->constructor(\DI\get('session')),
+        ->constructor(\DI\get('session')),
 
     // CSRF
     'csrf.name'                                  => 'X-XSRF-TOKEN',

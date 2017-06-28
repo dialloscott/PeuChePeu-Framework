@@ -2,21 +2,19 @@
 
 namespace Core\Twig;
 
-use DI\Container;
-
 /**
  * Permet de rajouter la fonction module_enabled() à Twig.
  */
 class ModuleExtension extends \Twig_Extension
 {
     /**
-     * @var Container
+     * @var string[]
      */
-    private $container;
+    private $modules;
 
-    public function __construct(Container $container)
+    public function __construct(array $modules)
     {
-        $this->container = $container;
+        $this->modules = $modules;
     }
 
     public function getFunctions(): array
@@ -28,8 +26,13 @@ class ModuleExtension extends \Twig_Extension
 
     public function hasModule(string $moduleName): bool
     {
-        $moduleName = ucfirst($moduleName);
+        $moduleName = ucfirst($moduleName) . 'Module';
+        foreach ($this->modules as $module) {
+            if (mb_strpos($module, $moduleName) !== false) {
+                return true;
+            }
+        }
 
-        return $this->container->has("App\\{$moduleName}\\{$moduleName}Module");
+        return false;
     }
 }

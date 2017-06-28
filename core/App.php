@@ -56,6 +56,7 @@ class App extends \DI\Bridge\Slim\App
         $builder->addDefinitions(__DIR__ . '/config.php');
         $builder->addDefinitions($this->definitions);
         $builder->addDefinitions([
+            'app'            => $this,
             get_class($this) => $this
         ]);
         foreach ($this->modules as $module) {
