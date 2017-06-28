@@ -63,9 +63,8 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 - [x] Création de miniature pour les images des articles
 - [x] Ajout des catégories
 - [x] Page contact (permet de voir le traitement des formulaire)
-
+- [x] Réactivatation du middleware Whoops
 - [ ] Page d'erreur personnalisée
-- [ ] Réactivatation du middleware Whoops
 
 ### Module compte utilisateur
 

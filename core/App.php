@@ -26,13 +26,16 @@ class App extends \DI\Bridge\Slim\App
         // On construit le conteneur
         parent::__construct();
 
+        // Middlewares
+        if ($this->getContainer()->get('dev')) {
+            $this->add(new \Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware());
+        }
+        $this->add($this->getContainer()->get('csrf'));
+
         // On charge les modules
         foreach ($modules as $module) {
             $this->getContainer()->get($module);
         }
-
-        // Middlewares
-        $this->add($this->getContainer()->get('csrf'));
     }
 
     /**

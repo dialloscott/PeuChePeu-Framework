@@ -11,6 +11,7 @@ return [
     'settings.displayErrorDetails'               => true,
     'settings.routerCacheFile'                   => false,
     'settings.determineRouteBeforeAppMiddleware' => true,
+    'settings'                                   => \DI\add(['debug' => \DI\get('dev')]),
     'errorHandler'                               => \DI\object(\Core\Handler::class),
     'upload_path'                                => \DI\string('{basepath}/public/uploads'),
 
