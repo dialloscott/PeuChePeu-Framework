@@ -9,7 +9,13 @@ return [
     // Chemins
     'basepath'                                   => dirname(__DIR__),
     'settings.displayErrorDetails'               => true,
-    'settings.routerCacheFile'                   => false,
+    'settings.routerCacheFile'                   => function (\Psr\Container\ContainerInterface $c) {
+        if ($c->get('dev')) {
+            return false;
+        }
+
+        return $c->get('basepath') . '/tmp/routes';
+    },
     'settings.determineRouteBeforeAppMiddleware' => true,
     'settings'                                   => \DI\add(['debug' => \DI\get('dev')]),
     'errorHandler'                               => \DI\object(\Core\Handler::class),

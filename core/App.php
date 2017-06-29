@@ -2,6 +2,9 @@
 
 namespace Core;
 
+use DI\ContainerBuilder;
+use Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
+
 class App extends \DI\Bridge\Slim\App
 {
     /**
@@ -28,7 +31,7 @@ class App extends \DI\Bridge\Slim\App
 
         // Middlewares
         if ($this->getContainer()->get('dev')) {
-            $this->add(new \Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware());
+            $this->add(new WhoopsMiddleware());
         }
         $this->add($this->getContainer()->get('csrf'));
 
@@ -39,21 +42,11 @@ class App extends \DI\Bridge\Slim\App
     }
 
     /**
-     * Récupère la liste des modules disponibles.
-     *
-     * @return array
-     */
-    public function getModules(): array
-    {
-        return $this->modules;
-    }
-
-    /**
      * Permet de configurer le conteneur d'injection de dépendances.
      *
-     * @param \DI\ContainerBuilder $builder
+     * @param ContainerBuilder $builder
      */
-    protected function configureContainer(\DI\ContainerBuilder $builder): void
+    protected function configureContainer(ContainerBuilder $builder): void
     {
         // PHP-DI
         $builder->addDefinitions(__DIR__ . '/config.php');
@@ -67,5 +60,15 @@ class App extends \DI\Bridge\Slim\App
                 $builder->addDefinitions($module::DEFINITIONS);
             }
         }
+    }
+
+    /**
+     * Récupère la liste des modules disponibles.
+     *
+     * @return array
+     */
+    public function getModules(): array
+    {
+        return $this->modules;
     }
 }

@@ -64,7 +64,7 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 - [x] Ajout des catégories
 - [x] Page contact (permet de voir le traitement des formulaire)
 - [x] Réactivatation du middleware Whoops
-- [ ] Page d'erreur personnalisée
+- [x] Page d'erreur personnalisée
 
 ### Module compte utilisateur
 

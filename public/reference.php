@@ -2,6 +2,7 @@
 // Fichier servant de benchmark de reference
 require '../vendor/autoload.php';
 session_start();
+
 $database = new \Core\Database\Database('monframework');
 $postTable = new \App\Blog\Table\PostTable($database);
 $text = new \Core\Twig\TextExtension();
