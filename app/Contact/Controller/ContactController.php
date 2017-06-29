@@ -26,8 +26,6 @@ class ContactController extends Controller
             }
         }
 
-        return $this->lol;
-
         return $this->render('@contact/contact', compact('message', 'errors'));
     }
 

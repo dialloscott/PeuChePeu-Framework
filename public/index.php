@@ -13,7 +13,8 @@ $app = new \Core\App(
         \App\Admin\AdminModule::class,
         \App\Auth\AuthModule::class,
         \App\Blog\BlogModule::class,
-        \App\Contact\ContactModule::class
+        \App\Contact\ContactModule::class,
+        \App\Error\ErrorModule::class
     ]
 );
 
