@@ -247,4 +247,24 @@ class ValidatorTest extends TestCase {
         $this->assertCount(1, $errors);
     }
 
+    public function testConfirm () {
+        $errors = $this
+            ->makeValidator(['a' => '12'])
+            ->confirm('a')
+            ->getErrors();
+        $this->assertCount(1, $errors);
+
+        $errors = $this
+            ->makeValidator(['a' => '123', 'a_confirm' => '1234'])
+            ->confirm('a')
+            ->getErrors();
+        $this->assertCount(1, $errors, 'Si les valeurs sont différentes doit renvoyer une erreur');
+
+        $errors = $this
+            ->makeValidator(['a' => '1234', 'a_confirm' => '1234'])
+            ->confirm('a')
+            ->getErrors();
+        $this->assertCount(0, $errors);
+    }
+
 }

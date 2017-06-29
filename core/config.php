@@ -8,6 +8,7 @@ return [
 
     // Chemins
     'basepath'                                   => dirname(__DIR__),
+    'settings.addContentLengthHeader'            => false,
     'settings.displayErrorDetails'               => true,
     'settings.routerCacheFile'                   => function (\Psr\Container\ContainerInterface $c) {
         if ($c->get('dev')) {
@@ -26,7 +27,7 @@ return [
 
     // Vue
     'view.cache'                                 => \DI\string('{basepath}/tmp/views'),
-    \Core\View\ViewInterface::class              => function (\Psr\Container\ContainerInterface $c) {
+    'view'                                       => function (\Psr\Container\ContainerInterface $c) {
         return new \Core\View\TwigView([
             new \Core\Twig\ModuleExtension($c->get('app')->getModules()),
             new \Core\Twig\RouterExtension($c->get('router'), $c->get('request')->getUri()),
@@ -37,11 +38,12 @@ return [
             new \Core\Twig\TextExtension()
         ], $c->get('dev') ? false : $c->get('view.cache'));
     },
+    \Core\View\ViewInterface::class              => \DI\get('view'),
 
     // Session
     'session'                                    => \DI\object(\Core\Session\Session::class),
     'session.flash'                              => \DI\object(\Slim\Flash\Messages::class)
-                                                        ->constructor(\DI\get('session')),
+        ->constructor(\DI\get('session')),
     \Core\Session\SessionInterface::class        => \DI\get('session'),
     \Slim\Flash\Messages::class                  => \DI\get('session.flash'),
 
@@ -74,8 +76,8 @@ return [
     // Mailer
     'mailer.webmaster'                           => 'demo@local.dev',
     'mailer.transport'                           => \DI\object(Swift_SmtpTransport::class)
-                                                        ->constructor('localhost', 1025),
+        ->constructor('localhost', 1025),
     'mailer'                                     => \DI\object(Swift_Mailer::class)
-                                                        ->constructor(\DI\get('mailer.transport')),
+        ->constructor(\DI\get('mailer.transport')),
     Swift_Mailer::class                          => \DI\get('mailer')
 ];

@@ -68,9 +68,9 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 
 ### Module compte utilisateur
 
-- [ ] Inscription
-- [ ] Rappel du mot de passe
+- [x] Inscription
 - [ ] Suppression du compte
+- [ ] Rappel du mot de passe
 
 ### Bloc e-commerce
 

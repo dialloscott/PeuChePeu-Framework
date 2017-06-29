@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-header">S'inscrire</div>
+  <div class="card-block">
+    <form action="{{ path_for('registration.signup') }}" class="from" method="post">
+      {{ csrf_input() }}
+      {% include 'shared/input.twig' with {key: 'username', label: "Nom d'utilisateur", value: user.username} %}
+      {% include 'shared/input.twig' with {type: 'email', key: 'email', label: "Email", value: user.email} %}
+      {% include 'shared/input.twig' with {type: 'password', key: 'password', label: "Mot de passe"} %}
+      {% include 'shared/input.twig' with {type: 'password', key: 'password_confirm', label: "Confirmation du mot de passe"} %}
+      <button class="btn btn-primary">S'inscrire</button>
+    </form>
+  </div>
+</div>

@@ -14,11 +14,13 @@ $app = new \Core\App(
         \App\Auth\AuthModule::class,
         \App\Blog\BlogModule::class,
         \App\Contact\ContactModule::class,
-        \App\Error\ErrorModule::class
+        \App\Error\ErrorModule::class,
+        \App\Registration\RegistrationModule::class
     ]
 );
 
 // On lance l'application
 if (php_sapi_name() !== "cli") {
-    $app->run();
+    $content = $app->run(true);
+    $app->respond($content);
 }

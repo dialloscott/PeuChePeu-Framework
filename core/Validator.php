@@ -222,13 +222,31 @@ class Validator
      *
      * @param string $key
      *
-     * @return $this
+     * @return self
      */
     public function email(string $key): self
     {
         $value = $this->getValue($key);
         if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[$key] = 'Cet email ne semble pas valide';
+        }
+
+        return $this;
+    }
+
+    /**
+     * Un champs key_confirm doit être présent avec la même valeur que le champs initial.
+     *
+     * @param string $key
+     *
+     * @return Validator
+     */
+    public function confirm(string $key): self
+    {
+        $value = $this->getValue($key);
+        $valueConfirmed = $this->getValue($key . '_confirm');
+        if ($value !== $valueConfirmed) {
+            $this->errors[$key] = 'Vous n\'avez pas confirmez le ' . $key;
         }
 
         return $this;

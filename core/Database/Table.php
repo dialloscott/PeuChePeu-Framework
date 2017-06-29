@@ -143,6 +143,16 @@ class Table
     }
 
     /**
+     * Renvoie la table utilisée.
+     *
+     * @return null|string
+     */
+    public function getTable(): ?string
+    {
+        return static::TABLE;
+    }
+
+    /**
      * Récupère les données paginées.
      *
      * @param int $perPage

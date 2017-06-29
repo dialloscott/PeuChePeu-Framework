@@ -1,0 +1,13 @@
+{% extends 'layout.twig' %}
+
+{% block title "S'inscrire" %}
+
+{% block content %}
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-6">
+      {% include('@registration/form.twig') %}
+    </div>
+  </div>
+
+{% endblock %}

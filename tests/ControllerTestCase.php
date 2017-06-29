@@ -40,4 +40,20 @@ class ControllerTestCase extends TestCase {
         return $request;
     }
 
+    public function shouldRender(...$params): void
+    {
+        $method = $this->controller->expects($this->once())
+            ->method('render');
+
+        call_user_func_array([$method, 'with'], $params);
+    }
+
+    public function shouldRedirect(...$params): void
+    {
+        $method = $this->controller->expects($this->once())
+            ->method('redirect');
+
+        call_user_func_array([$method, 'with'], $params);
+    }
+
 }
