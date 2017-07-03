@@ -30,6 +30,11 @@
     <ul class="navbar-nav">
       {% if has_module('auth') %}
         {% if current_user() %}
+          {% if has_module('registration') %}
+            <li class="nav-item">
+              <a href="{{ path_for('registration.account') }}" class="nav-link">Mon compte</a>
+            </li>
+          {% endif %}
           {% if has_module('admin') and has_role('admin') %}
             <li class="nav-item">
               <a class="nav-link" href="{{ path_for('admin.index') }}">Administration</a>
