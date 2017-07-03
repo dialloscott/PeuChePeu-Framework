@@ -8,9 +8,9 @@ use Framework\View\ViewInterface;
 
 class ContactModule extends Module
 {
-    public function __construct(App $app)
+    public function __construct(App $app, ViewInterface $view)
     {
-        $app->getContainer()->get(ViewInterface::class)->addPath(__DIR__ . '/views', 'contact');
+        $view->addPath(__DIR__ . '/views', 'contact');
 
         // Routes
         $app

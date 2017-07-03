@@ -1,5 +1,7 @@
 <?php
 
 return [
-    \App\Blog\PostUpload::class          => \DI\object()->constructor(\DI\string('{upload_path}/posts')),
+    \App\Blog\BlogModule::class => \DI\object()
+        ->constructorParameter('middleware', \DI\get('admin.middleware')),
+    \App\Blog\PostUpload::class => \DI\object()->constructor(\DI\string('{upload_path}/posts')),
 ];

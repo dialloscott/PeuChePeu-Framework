@@ -2,12 +2,14 @@
 
 namespace App\Blog;
 
+use App\Auth\Middleware\RoleMiddleware;
 use App\Blog\Controller\Admin\BlogController as AdminBlogController;
 use App\Blog\Controller\Admin\CategoriesController as AdminCategoriesController;
 use App\Blog\Controller\BlogController;
 use Framework\App;
 use Framework\Module;
 use Framework\View\ViewInterface;
+use Psr\Container\ContainerInterface;
 
 class BlogModule extends Module
 {
@@ -15,11 +17,14 @@ class BlogModule extends Module
     public const SEEDS = __DIR__ . '/db/seeds';
     public const DEFINITIONS = __DIR__ . '/config.php';
 
-    public function __construct(App $app)
-    {
+    public function __construct(
+        App $app,
+        RoleMiddleware $middleware,
+        ViewInterface $view,
+        ContainerInterface $container
+    ) {
         // Ajout du dossier des vues
-        $container = $app->getContainer();
-        $container->get(ViewInterface::class)->addPath(__DIR__ . '/views', 'blog');
+        $view->addPath(__DIR__ . '/views', 'blog');
 
         // Gestion des routes
         $app->get('/blog', [BlogController::class, 'index'])->setName('blog.index');

@@ -4,7 +4,8 @@ namespace App\Auth;
 
 use App\Auth\Controller\PasswordController;
 use App\Auth\Controller\SessionController;
-use DI\Container;
+use App\Auth\Middleware\LoggedinMiddleware;
+use App\Auth\Twig\AuthTwigExtension;
 use Framework\App;
 use Framework\Module;
 use Framework\View\TwigView;
@@ -16,37 +17,26 @@ class AuthModule extends Module
     public const SEEDS = __DIR__ . '/db/seeds';
     public const DEFINITIONS = __DIR__ . '/config.php';
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-    public function __construct(Container $container)
+    public function __construct(ViewInterface $view, AuthService $authService, App $app)
     {
-        $container->call([$this, 'routes']);
-        $container->call([$this, 'view']);
-        $this->container = $container;
-    }
-
-    public function view(ViewInterface $view, Twig\AuthTwigExtension $extension)
-    {
+        // Gestion des views
         $view->addPath(__DIR__ . '/views', 'auth');
         if ($view instanceof TwigView) {
-            $view->getTwig()->addExtension($extension);
+            $view->getTwig()->addExtension(new AuthTwigExtension($authService));
         }
-    }
 
-    public function routes(App $router)
-    {
-        $router->get('/login', [SessionController::class, 'create'])->setName('auth.login');
-        $router->post('/login', [SessionController::class, 'store']);
-        $router->delete('/logout', [SessionController::class, 'destroy'])->setName('auth.logout');
+        // Gestion des routes
+        $app->get('/login', [SessionController::class, 'create'])->setName('auth.login');
+        $app->post('/login', [SessionController::class, 'store']);
+        $app
+            ->delete('/logout', [SessionController::class, 'destroy'])
+            ->setName('auth.logout')
+            ->add(new LoggedinMiddleware($authService));
 
-        $router->get('/password/reset', [PasswordController::class, 'formReset'])->setName('auth.password_reset');
-        $router->post('/password/reset', [PasswordController::class, 'reset']);
-        $router->get('/password/recover/{id}/{token}', [PasswordController::class, 'recover'])
+        $app->get('/password/reset', [PasswordController::class, 'formReset'])->setName('auth.password_reset');
+        $app->post('/password/reset', [PasswordController::class, 'reset']);
+        $app->get('/password/recover/{id}/{token}', [PasswordController::class, 'recover'])
             ->setName('auth.password_recover');
-        $router->post('/password/recover/{id}/{token}', [PasswordController::class, 'recover'])
-            ->setName('auth.password_recover');
+        $app->post('/password/recover/{id}/{token}', [PasswordController::class, 'recover']);
     }
 }
