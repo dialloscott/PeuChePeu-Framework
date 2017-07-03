@@ -3,7 +3,7 @@ namespace Tests\App\Registration\RegistrationController;
 
 use App\Auth\Table\UserTable;
 use App\Registration\Controller\RegistrationController;
-use Core\Database\Database;
+use Framework\Database\Database;
 use Tests\ControllerTestCase;
 
 class RegistrationControllerTest extends ControllerTestCase {

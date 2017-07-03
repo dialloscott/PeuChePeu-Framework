@@ -1,0 +1,22 @@
+{% extends('layout.twig') %}
+
+{% block title 'Mot de passe oublié' %}
+
+{% block content %}
+
+  <div class="row justify-content-md-center">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-header">Mot de passe oublié</div>
+        <div class="card-block">
+          <form action="" method="post">
+            {{ csrf_input() }}
+            {% include 'shared/input.twig' with {type: 'email', key: 'email', label: "Email", value: params.email} %}
+            <button class="btn btn-primary">M'envoyer les instructions</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -6,7 +6,7 @@ define('WWW_ROOT', __DIR__);
 define('UPLOAD_PATH', __DIR__ . '/uploads');
 
 // On démarre slim
-$app = new \Core\App(
+$app = new \Framework\App(
     dirname(__DIR__) . '/config.php',
     [
         \App\Base\BaseModule::class,

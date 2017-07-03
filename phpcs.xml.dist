@@ -18,6 +18,5 @@
     </rule>
 
     <!-- Paths to check -->
-    <file>app</file>
-    <file>core</file>
+    <file>src</file>
 </ruleset>

@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Core;
 
-use Core\Database\Database;
-use Core\Database\Table;
-use Core\Validator;
+use Framework\Database\Database;
+use Framework\Database\Table;
+use Framework\Validator;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 

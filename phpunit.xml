@@ -19,8 +19,7 @@
 
     <filter>
         <whitelist>
-            <directory>core</directory>
-            <directory>app</directory>
+            <directory>src</directory>
         </whitelist>
     </filter>
 

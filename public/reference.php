@@ -3,9 +3,9 @@
 require '../vendor/autoload.php';
 session_start();
 
-$database = new \Core\Database\Database('monframework');
+$database = new \Framework\Database\Database('monframework');
 $postTable = new \App\Blog\Table\PostTable($database);
-$text = new \Core\Twig\TextExtension();
+$text = new \Framework\Twig\TextExtension();
 $posts = $postTable->findPaginated(10, isset($_GET['page']) ? $_GET['page'] :
     1);
 function chunk_iterable($listOfThings, $size) {

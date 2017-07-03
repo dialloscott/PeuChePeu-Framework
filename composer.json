@@ -10,8 +10,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Core\\": "core/",
-            "App\\": "app/",
+            "Framework\\": "src/Framework",
+            "App\\": "src/",
             "Tests\\": "tests/"
         }
     },

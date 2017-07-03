@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Core\Database;
 
-use Core\Database\Table;
+use Framework\Database\Table;
 
 class FakeTableTest extends Table {
     const TABLE = "fake";
@@ -23,7 +23,7 @@ class TableTest extends \PHPUnit\Framework\TestCase {
 
     public function setUp()
     {
-        $this->database = $this->getMockBuilder(\Core\Database\Database::class)
+        $this->database = $this->getMockBuilder(\Framework\Database\Database::class)
             ->disableOriginalConstructor()
             ->setMethods(['query', 'fetch', 'lastInsertId', 'fetchColumn'])
             ->getMock();

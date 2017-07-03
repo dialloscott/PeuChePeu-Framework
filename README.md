@@ -12,7 +12,7 @@ modules qui fonctionnent de manière indépendantes. L'idée est de poser le cod
 
 ## Principe
 
-- **Core**, fournit les fonctionnalitées abstraites qui seront partagées entre les projets
+- **Framework**, fournit les fonctionnalitées abstraites qui seront partagées entre les projets
 - **App/Base**, fournit les élément partagés par les blocs de l'application (templates de bases par exemple)
 - **App/{Blog,Payment,Auth...}**, permet de créer des blocs interchangeables et réutilisables dans l'application. Le 
 principe est de découper notre application en fonction du contexte, plutôt que d'appliquer une structure MVC à la 

@@ -10,7 +10,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase {
 
     public function testStart() {
         $this->assertEquals(PHP_SESSION_NONE, session_status());
-        $session = new \Core\Session\Session();
+        $session = new \Framework\Session\Session();
         $this->assertEquals(PHP_SESSION_NONE, session_status());
         $username = $session->get('username');
         $this->assertNull($username);
@@ -19,18 +19,18 @@ class SessionTest extends \PHPUnit\Framework\TestCase {
 
     public function testAlreadyStarted() {
         session_start();
-        $session = new \Core\Session\Session();
+        $session = new \Framework\Session\Session();
         $this->assertNotNull($session);
     }
 
     public function testSetGet() {
-        $session = new \Core\Session\Session();
+        $session = new \Framework\Session\Session();
         $session->set('key', 'value');
         $this->assertEquals('value', $session->get('key'));
     }
 
     public function testDestroy() {
-        $session = new \Core\Session\Session();
+        $session = new \Framework\Session\Session();
         $session->set('key', 'value');
         $session->destroy();
         $this->assertEquals(null, $session->get('key'));

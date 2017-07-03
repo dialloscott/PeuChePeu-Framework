@@ -1,0 +1,23 @@
+{% extends('layout.twig') %}
+
+{% block title 'Mot de passe oublié' %}
+
+{% block content %}
+
+  <div class="row justify-content-md-center">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-header">Réinitialiser mon mot de passe</div>
+        <div class="card-block">
+          <form action="" method="post">
+            {{ csrf_input() }}
+            {% include 'shared/input.twig' with {type: 'password', key: 'password', label: "Mot de passe", value: params.password} %}
+            {% include 'shared/input.twig' with {type: 'password', key: 'password_confirm', label: "Confirmer le mot de passe", value: params.password} %}
+            <button class="btn btn-primary">Réinitialiser le mot de passe</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

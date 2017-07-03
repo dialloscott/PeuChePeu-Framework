@@ -4,8 +4,8 @@ namespace Tests\App\Auth;
 use App\Auth\AuthService;
 use App\Auth\Entity\User;
 use App\Auth\Table\UserTable;
-use Core\Database\Database;
-use Core\Session\Session;
+use Framework\Database\Database;
+use Framework\Session\Session;
 
 class AuthServiceTest extends \PHPUnit\Framework\TestCase
 {
@@ -21,7 +21,7 @@ class AuthServiceTest extends \PHPUnit\Framework\TestCase
     private $user;
 
     /**
-     * @var \Core\Session\Session
+     * @var \Framework\Session\Session
      */
     private $session;
 
