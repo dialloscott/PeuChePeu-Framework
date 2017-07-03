@@ -2,6 +2,7 @@
 
 namespace App\Auth\Middleware;
 
+use App\Auth\AuthService;
 use App\Auth\Exception\ForbiddenException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -9,15 +10,11 @@ use Psr\Http\Message\ServerRequestInterface;
 class LoggedinMiddleware
 {
     /**
-     * @var string
-     */
-    private $role;
-    /**
-     * @var \App\Auth\AuthService
+     * @var AuthService
      */
     private $auth;
 
-    public function __construct(\App\Auth\AuthService $auth)
+    public function __construct(AuthService $auth)
     {
         $this->auth = $auth;
     }
