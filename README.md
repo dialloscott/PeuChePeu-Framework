@@ -50,7 +50,7 @@ fichier MakeFile. Inutile de réinventer la roue et nos besoins restent relative
 - Créer les tests unitaires en parallèle du projet est indispensable mais je ne suis pas sûr de le faire en vidéo car 
 c'est long et répétitif (au pire ils seront fournis avec les sources).
 
-## Todo (MVP)
+## Base
 
 - [x] Poser la base Slim / PHP-DI
 - [x] Module Blog (front, permet de voir l'interaction avec la base de données)
@@ -72,12 +72,12 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 - [x] Suppression du compte
 - [x] Rappel du mot de passe
 
-### Bloc e-commerce
+### Module e-commerce
 
 - [ ] Gestion du catalogue produit
 - [ ] Mise en place de l'achat direct d'un produit (paiement via stripe surement)
 
-### Bloc e-commerce (monnaire virtuelle)
+### Module e-commerce / monnaire virtuelle
 
 - [ ] Achat de points (monnaie intermédiaire)
 - [ ] Achat d'un produit en utilisant les points obtenus

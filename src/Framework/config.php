@@ -50,7 +50,7 @@ return [
     // CSRF
     'csrf.name'                                  => 'X-XSRF-TOKEN',
     'csrf.key'                                   => \DI\env('csrf_key', 'fake key'),
-    'csrf'                                       => function ($c) {
+    'csrf'                                       => function (\Psr\Container\ContainerInterface $c) {
         return CsrfMiddlewareBuilder::create($c->get('csrf.key'))
             ->buildSynchronizerTokenPatternMiddleware($c->get('csrf.name'));
     },

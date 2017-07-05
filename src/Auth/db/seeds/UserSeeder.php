@@ -14,7 +14,6 @@ class UserSeeder extends AbstractSeed
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
         $data = [
             'username' => 'admin',
             'email'    => 'admin@admin.fr',
