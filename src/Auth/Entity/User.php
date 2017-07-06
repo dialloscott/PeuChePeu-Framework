@@ -10,16 +10,6 @@ class User
     public $password_reset_token;
     public $password_reset_at;
 
-    /**
-     * @var array Liste les rôles de l'utilisateur
-     */
-    public $roles = [];
-
-    public function __construct()
-    {
-        $this->roles = ['admin'];
-    }
-
     public function checkPassword(string $password)
     {
         return password_verify($password, $this->password);
@@ -27,7 +17,7 @@ class User
 
     public function hasRole(string $role): bool
     {
-        return in_array($role, $this->roles, true);
+        return in_array($role, [$this->role], true);
     }
 
     public function isTokenValid(string $token): bool

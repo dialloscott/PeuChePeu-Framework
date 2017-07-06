@@ -5,10 +5,8 @@ namespace App\Auth;
 use App\Auth\Controller\PasswordController;
 use App\Auth\Controller\SessionController;
 use App\Auth\Middleware\LoggedinMiddleware;
-use App\Auth\Twig\AuthTwigExtension;
 use Framework\App;
 use Framework\Module;
-use Framework\View\TwigView;
 use Framework\View\ViewInterface;
 
 class AuthModule extends Module
@@ -21,9 +19,6 @@ class AuthModule extends Module
     {
         // Gestion des views
         $view->addPath(__DIR__ . '/views', 'auth');
-        if ($view instanceof TwigView) {
-            $view->getTwig()->addExtension(new AuthTwigExtension($authService));
-        }
 
         // Gestion des routes
         $app->get('/login', [SessionController::class, 'create'])->setName('auth.login');

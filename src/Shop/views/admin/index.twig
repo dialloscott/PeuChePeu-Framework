@@ -3,11 +3,12 @@
 {% block title %}
     Blog{% if page > 1 %}, page {{ page }}{% endif %}
 {% endblock %}
+
 {% block content %}
 
     <p class="text-right">
-        <a href="{{ path_for('blog.admin.create') }}" class="btn btn-primary">
-            Créer un article
+        <a href="{{ path_for('shop.admin.create') }}" class="btn btn-primary">
+            Créer un nouveau produit
         </a>
     </p>
 
@@ -23,13 +24,12 @@
             <tr>
                 <td>{{ item.name }}</td>
                 <td>
-                    <a href="{{ path_for('blog.admin.edit', {id: item.id}) }}" class="btn btn-primary">Editer</a>
+                    <a href="{{ path_for('shop.admin.edit', {id: item.id}) }}" class="btn btn-primary">Editer</a>
                     <form
                             style="display: inline;"
                             method="post"
-                            action="{{ path_for('blog.admin.destroy', {id: item.id}) }}"
-                            onsubmit="return confirm('Voulez vous vraiment supprimer cet article ? ');"
-                    >
+                            action="{{ path_for('shop.admin.destroy', {id: item.id}) }}"
+                            onsubmit="return confirm('Voulez vous vraiment supprimer cet article ? ');">
                         {{ csrf_input() }}
                         <input type="hidden" name="_METHOD" value="DELETE">
                         <button class="btn btn-danger" type="submit">
@@ -42,6 +42,6 @@
         </tbody>
     </table>
 
-    {{ paginate(items, 'blog.admin.index') }}
+    {{ paginate(items, 'shop.admin.index') }}
 
 {% endblock %}

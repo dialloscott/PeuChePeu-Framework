@@ -12,7 +12,6 @@ class RoleMiddlewareTest extends TestCase {
     public function setUp()
     {
         $this->user = new User();
-        $this->user->roles = ['admin', 'demo'];
         parent::setUp();
     }
 
@@ -35,7 +34,7 @@ class RoleMiddlewareTest extends TestCase {
     }
 
     public function testFakeRole () {
-        $this->user->roles = ['notAdmin'];
+        $this->user->role = 'notAdmin';
         $this->expectException(\App\Auth\Exception\ForbiddenException::class);
         $calls = 0;
         $this
@@ -52,7 +51,7 @@ class RoleMiddlewareTest extends TestCase {
     }
 
     public function testGoodRole () {
-        $this->user->roles = ['admin'];
+        $this->user->role = 'admin';
         $calls = 0;
         $this
             ->getMiddleware('admin')

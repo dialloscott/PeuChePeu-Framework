@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header">{{ post.category_name }}</div>
+  {% if post.image %}
+    <img style="width: 100%; height: auto;" class="card-img-top" src="{{ post.thumb }}" alt="{{ post.name }}"
+         width="318" height="180">
+  {% endif %}
+  <div class="card-block">
+    <h4 class="card-title">{{ post.name }}</h4>
+    <p class="card-text">
+      {{ post.content | excerpt }}
+    </p>
+    <p class="text-muted">
+      <small>{{ time_tag(post.created_at) }}</small>
+    </p>
+  </div>
+  <div class="card-footer text-right">
+    <a href="{{ path_for('blog.show', {slug: post.slug}) }}" class="btn btn-primary">
+      Voir l'article
+    </a>
+  </div>
+</div>

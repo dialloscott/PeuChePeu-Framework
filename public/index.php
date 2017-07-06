@@ -15,7 +15,8 @@ $app = new \Framework\App(
         \App\Blog\BlogModule::class,
         \App\Contact\ContactModule::class,
         \App\Error\ErrorModule::class,
-        \App\Registration\RegistrationModule::class
+        \App\Registration\RegistrationModule::class,
+        \App\Shop\ShopModule::class
     ]
 );
 

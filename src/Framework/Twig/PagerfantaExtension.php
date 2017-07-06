@@ -4,7 +4,7 @@ namespace Framework\Twig;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrap4View;
-use Slim\Router;
+use Slim\Interfaces\RouterInterface;
 
 /**
  * Permet de rajouter la pagination.
@@ -16,7 +16,7 @@ class PagerfantaExtension extends \Twig_Extension
      */
     private $router;
 
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }

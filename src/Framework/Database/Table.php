@@ -20,7 +20,7 @@ class Table
     /**
      * Permet de définir dans quel entité sauvegarder les résultats.
      */
-    protected const ENTITY = null;
+    public const ENTITY = null;
 
     public function __construct(Database $database)
     {

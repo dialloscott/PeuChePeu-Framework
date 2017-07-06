@@ -287,4 +287,14 @@ class Validator
 
         return $this;
     }
+
+    public function numeric(string $key): self
+    {
+        $value = $this->getValue($key);
+        if (!is_numeric($value)) {
+            $this->errors[$key] = 'Le prix ne semble pas valide';
+        }
+
+        return $this;
+    }
 }

@@ -15,6 +15,17 @@ class PostTable extends Table
     public const TABLE = 'posts';
     public const ENTITY = PostEntity::class;
 
+    public function findLatest()
+    {
+        return $this->database->fetchAll('SELECT 
+              posts.*,
+              categories.name as category_name, categories.slug as category_slug
+            FROM posts 
+            LEFT JOIN categories ON categories.id = posts.category_id
+            ORDER BY created_at DESC
+            LIMIT 4', [], PostEntity::class);
+    }
+
     /**
      * Récupère les données paginées.
      *

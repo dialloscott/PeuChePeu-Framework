@@ -7,7 +7,7 @@ return [
     'dev'                                        => true,
 
     // Chemins
-    'basepath'                                   => dirname(__DIR__),
+    'basepath'                                   => dirname(dirname(__DIR__)),
     'settings.addContentLengthHeader'            => false,
     'settings.displayErrorDetails'               => true,
     'settings.routerCacheFile'                   => function (\Psr\Container\ContainerInterface $c) {
@@ -27,16 +27,20 @@ return [
 
     // Vue
     'view.cache'                                 => \DI\string('{basepath}/tmp/views'),
+    'twig.extensions'                            => [
+        \DI\object(\Framework\Twig\ModuleExtension::class)->constructor(\DI\factory(['app', 'getModules'])),
+        \DI\object(\Framework\Twig\RouterExtension::class)->constructor(
+            \DI\get('router'),
+            \DI\factory(['request', 'getUri'])
+        ),
+        \DI\object(\Knlv\Slim\Views\TwigMessages::class)->constructor(\DI\get(\Slim\Flash\Messages::class)),
+        \DI\object(\Framework\Twig\PagerfantaExtension::class)->constructor(\DI\get('router')),
+        \DI\object(\Framework\Twig\TimeExtension::class),
+        \DI\object(\Framework\Twig\CsrfExtension::class)->constructor(\DI\get('csrf.name'), \DI\get('csrf')),
+        \DI\object(\Framework\Twig\TextExtension::class),
+    ],
     'view'                                       => function (\Psr\Container\ContainerInterface $c) {
-        return new \Framework\View\TwigView([
-            new \Framework\Twig\ModuleExtension($c->get('app')->getModules()),
-            new \Framework\Twig\RouterExtension($c->get('router'), $c->get('request')->getUri()),
-            new \Framework\Twig\PagerfantaExtension($c->get('router')),
-            new \Framework\Twig\TimeExtension(),
-            new \Framework\Twig\CsrfExtension($c->get('csrf.name'), $c->get('csrf')),
-            new \Knlv\Slim\Views\TwigMessages($c->get(\Slim\Flash\Messages::class)),
-            new \Framework\Twig\TextExtension()
-        ], $c->get('dev') ? false : $c->get('view.cache'));
+        return new \Framework\View\TwigView($c->get('twig.extensions'), $c->get('dev') ? false : $c->get('view.cache'));
     },
     \Framework\View\ViewInterface::class         => \DI\get('view'),
 

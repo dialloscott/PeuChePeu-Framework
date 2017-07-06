@@ -1,5 +1,15 @@
 {% extends('layout.twig') %}
 
 {% block content %}
-    <h1>Homepage</h1>
+  <h1>News</h1>
+  <div class="row" style="margin-bottom: 2rem;">
+    {% for post in posts %}
+      <div class="col-sm-3">
+        {% include '@blog/single.twig' with {post: post} %}
+      </div>
+    {% endfor %}
+  </div>
+  <p class="text-right">
+    <a href="{{ path_for('blog.index') }}" class="btn btn-primary">Voir le blog</a>
+  </p>
 {% endblock %}
