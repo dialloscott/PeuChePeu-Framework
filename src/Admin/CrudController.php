@@ -70,7 +70,8 @@ class CrudController extends Controller
                 foreach ($this->files as $key) {
                     $item[$key] = $this->uploader->upload($request->getUploadedFiles()[$key]);
                 }
-                $this->table->create($item);
+                $id = $this->table->create($item);
+                $this->postPersist($request, $id);
                 $this->flash('success', $this->getSuccessCreateMessage());
 
                 return $this->redirect($this->namespace . '.admin.index');
@@ -105,6 +106,7 @@ class CrudController extends Controller
 
                 // On met à jour la table
                 $this->table->update($id, $item);
+                $this->postPersist($request, $id);
                 $this->flash('success', $this->getSuccessUpdateMessage());
 
                 return $this->redirect($this->namespace . '.admin.index');
@@ -164,5 +166,9 @@ class CrudController extends Controller
     protected function getSuccessDeleteMessage()
     {
         return "L'élément a bien été supprimé";
+    }
+
+    protected function postPersist(ServerRequestInterface $request, int $id)
+    {
     }
 }

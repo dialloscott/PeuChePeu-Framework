@@ -36,9 +36,11 @@ class Handler
     public function __invoke(
         Request $request,
         Response $response,
-        \Exception $e
+        $e
     ) {
-        if ($e instanceof ForbiddenException) {
+        if ($e instanceof ForbiddenException ||
+            $e instanceof \TypeError && mb_strpos($e->getMessage(), 'App\Auth\Entity\User') > 0
+        ) {
             $this->flash->addMessage('error', 'Accès interdit');
             $this->flash->addMessage('redirect', $request->getUri());
 

@@ -26,10 +26,11 @@
         "kanellov/slim-twig-flash": "^0.2.0",
         "schnittstabil/psr7-csrf-middleware": "^1.1",
         "intervention/image": "^2.3",
-        "swiftmailer/swiftmailer": "^6.0"
+        "swiftmailer/swiftmailer": "^6.0",
+        "stripe/stripe-php": "^5.1",
+        "staaky/vatrates": "^2.0"
     },
     "require-dev": {
-        "digitalnature/php-ref": "^1.2",
         "phpunit/phpunit": "^6.2",
         "friendsofphp/php-cs-fixer": "v2.3.2",
         "fzaninotto/faker": "^1.6",

@@ -4,6 +4,7 @@ namespace App\Shop;
 
 use App\Shop\Controller\AdminProductController;
 use App\Shop\Controller\ProductController;
+use App\Shop\Controller\PurchaseController;
 use App\Shop\Widget\ProductWidget;
 use Framework\App;
 use Framework\Module;
@@ -24,7 +25,14 @@ class ShopModule extends Module
 
         // Routes
         $app->get('/boutique', [ProductController::class, 'index'])->setName('shop.index');
+        $app->group('/', function () {
+            $this->post('boutique/{id}', [ProductController::class, 'show']);
+            $this->post('boutique/{id}/buy', [ProductController::class, 'buy'])->setName('shop.buy');
+            $this->post('boutique/{id}/download', [ProductController::class, 'download'])->setName('shop.download');
+            $this->get('mes-achats', [PurchaseController::class, 'index'])->setName('shop.purchases');
+        })->add($container->get('auth.loggedInMiddleware'));
 
+        $app->get('/boutique/{id:[0-9]+}', [ProductController::class, 'show'])->setName('shop.show');
         // Pour le backend
         if ($container->has('admin.middleware')) {
             $app->group($container->get('admin.prefix'), function () {

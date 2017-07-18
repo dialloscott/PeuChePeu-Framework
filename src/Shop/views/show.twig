@@ -1,0 +1,46 @@
+{% extends('layout.twig') %}
+
+{% block content %}
+  <h1>Acheter {{ product.name }}</h1>
+
+  <div class="card">
+
+    <div class="row">
+      <div class="col-sm-6">
+        {% if product.image %}
+          <img style="width: 100%; height: auto;" class="card-img-top" src="{{ product.thumb }}"
+               alt="{{ product.name }}"
+               width="318" height="180">
+        {% endif %}
+        <div class="card-block">
+          <h4 class="card-title">{{ product.name }}</h4>
+          <p class="card-text">
+            {{ product.description | excerpt }}
+          </p>
+          <p class="text-muted">
+            <small>{{ time_tag(product.created_at) }}</small>
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-6" style="padding-top: 20px">
+        {% if current_user() %}
+        <form action="{{ path_for('shop.show', {id: product.id}) }}" method="POST">
+          {{ csrf_input() }}
+          <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="pk_test_Et9GdgxRPH9oBRXGCfMKX6RK"
+                  data-amount="{{ product.price * 100 }}"
+                  data-name="{{ product.name }}"
+                  data-currency="EUR"
+                  data-email="{{ current_user().email }}"
+                  data-description="{{ product.description }}"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-locale="auto"
+                  data-zip-code="true">
+          </script>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

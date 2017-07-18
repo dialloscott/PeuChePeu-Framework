@@ -74,8 +74,9 @@ c'est long et répétitif (au pire ils seront fournis avec les sources).
 
 ### Module e-commerce
 
-- [ ] Gestion du catalogue produit
-- [ ] Mise en place de l'achat direct d'un produit (paiement via stripe surement)
+- [x] Gestion du catalogue produit
+- [x] Mise en place de l'achat direct d'un produit (paiement via stripe surement)
+- [ ] Mise en place des factures ?
 
 ### Module e-commerce / monnaire virtuelle
 

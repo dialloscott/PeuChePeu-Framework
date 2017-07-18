@@ -47,15 +47,16 @@ class Controller
      * Renvoie une réponse de redirection.
      *
      * @param string $path
+     * @param array  $params
      *
      * @return ResponseInterface
      */
-    protected function redirect(string $path): ResponseInterface
+    protected function redirect(string $path, array $params = []): ResponseInterface
     {
         $response = new Response();
         $router = $this->container->get(Router::class);
 
-        return $response->withHeader('Location', $router->pathFor($path));
+        return $response->withHeader('Location', $router->pathFor($path, $params));
     }
 
     /**

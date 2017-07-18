@@ -7,8 +7,10 @@ class User
     public $password;
     public $username;
     public $id;
+    public $email;
     public $password_reset_token;
     public $password_reset_at;
+    public $stripe_customer_id;
 
     public function checkPassword(string $password)
     {

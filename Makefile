@@ -1,4 +1,4 @@
-.PHONY: help install server migrate seed lint lint.fix server install test test.html
+.PHONY: help clean install server migrate seed lint lint.fix server install test test.html
 
 ENV ?= dev
 COMPOSER_ARGS =
@@ -13,6 +13,13 @@ install: config.php vendor ## Install application
 
 server: ## Lance le serveur de dev
 	php -S localhost:8000 -t public -d display_errors=1 -d xdebug.remote_enable=1 -d xdebug.remote_autostart=1
+
+#############
+# Cache
+#############
+clean:
+	rm -rf ./tmp/
+	mkdir tmp
 
 #############
 # Base de données

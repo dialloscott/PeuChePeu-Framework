@@ -1,10 +1,11 @@
 {{ csrf_input() }}
-{% include 'shared/input.twig' with {key: 'name', label: "Titre", value: product.name} %}
-{% include 'shared/input.twig' with {key: 'price', label: "Prix", value: product.price} %}
-{% include 'shared/input.twig' with {type: 'textarea', key: 'description', label: "Description", value: product.description} %}
-{% if product.image %}
+{% include 'shared/input.twig' with {key: 'name', label: "Titre", value: item.name} %}
+{% include 'shared/input.twig' with {key: 'price', label: "Prix", value: item.price} %}
+{% include 'shared/input.twig' with {type: 'textarea', key: 'description', label: "Description", value: item.description} %}
+{% if item.image %}
     <p>
-        <img src="/uploads/produits/{{ product.image }}" alt="" width="300">
+        <img src="/uploads/produits/{{ item.image }}" alt="" width="300">
     </p>
 {% endif %}
 {% include 'shared/input.twig' with {key: 'image', label: 'Image à la une', type: 'file'} %}
+{% include 'shared/input.twig' with {key: 'pdf', label: 'Ebook (format PDF)', type: 'file'} %}

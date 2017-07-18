@@ -21,7 +21,7 @@ class Session implements SessionInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function &get(string $key)
+    public function &get(string $key, $default = null)
     {
         $this->ensureStarted();
         if (array_key_exists($key, $_SESSION)) {

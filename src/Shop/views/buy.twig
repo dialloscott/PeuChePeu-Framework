@@ -1,0 +1,55 @@
+{% extends('layout.twig') %}
+
+{% block content %}
+  <h1>Acheter {{ product.name }}</h1>
+
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>Information de paiement</h2>
+      {{ card.brand }} - **** **** **** {{ card.last4 }}
+
+      <hr>
+
+      <h2>Vérification de votre commande</h2>
+      <div class="card">
+        <div class="row">
+          <div class="col-sm-4">
+            {% if product.image %}
+              <img style="width: 100%; height: auto;" class="card-img-top" src="{{ product.thumb }}"
+                   alt="{{ product.name }}"
+                   width="318" height="180">
+            {% endif %}
+          </div>
+          <div class="col-sm-8" style="padding-top: 10px;">
+            <h4 class="card-title">{{ product.name }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <form action="{{ path_for('shop.buy', {id: product.id}) }}" method="post">
+        {{ csrf_input() }}
+        <input type="hidden" value="{{ token }}" name="token">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Payer</button>
+      </form>
+      <p>&nbsp;</p>
+      <h4>Récapitulatif de la commande</h4>
+      <table class="table">
+        <tbody>
+        <tr>
+          <td>Article</td>
+          <td>{{ product.price | number_format(2) }} €</td>
+        </tr>
+        <tr>
+          <td>TVA ({{ rate }}%)</td>
+          <td>{{ vat | number_format(2) }} €</td>
+        </tr>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td>{{ (product.price + vat) | number_format(2) }} €</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

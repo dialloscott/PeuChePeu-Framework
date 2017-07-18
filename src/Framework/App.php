@@ -33,6 +33,9 @@ class App extends \DI\Bridge\Slim\App
         if ($this->getContainer()->get('dev')) {
             $this->add(new WhoopsMiddleware());
         }
+        if ($this->getContainer()->has('auth.redirectMiddleware')) {
+            $this->add($this->getContainer()->get('auth.redirectMiddleware'));
+        }
         $this->add($this->getContainer()->get('csrf'));
 
         // On charge les modules

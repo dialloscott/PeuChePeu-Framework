@@ -2,8 +2,9 @@ tmp/
 vendor/
 build/
 .php_cs.cache
-/config.php
+config.php
 public/uploads
+downloads/
 
 # Jetbrains file
 .idea

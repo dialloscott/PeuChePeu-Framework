@@ -69,9 +69,9 @@ class Table
         return $results;
     }
 
-    public function findAll()
+    public function findAll(string $suffix = '', array $params = [])
     {
-        return $this->database->fetchAll('SELECT * FROM ' . static::TABLE, [], static::ENTITY);
+        return $this->database->fetchAll('SELECT * FROM ' . static::TABLE . ' ' . $suffix, $params, static::ENTITY);
     }
 
     /**

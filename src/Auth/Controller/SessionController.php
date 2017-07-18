@@ -4,6 +4,7 @@ namespace App\Auth\Controller;
 
 use App\Auth\AuthService;
 use Framework\Controller;
+use Framework\Session\SessionInterface;
 use Framework\View\ViewInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -18,20 +19,20 @@ class SessionController extends Controller
         return $view->render('@auth/login', compact('redirect'));
     }
 
-    public function store(Request $request, Response $response, AuthService $auth)
+    public function store(Request $request, AuthService $auth, SessionInterface $session)
     {
         $username = $request->getParam('username');
         $password = $request->getParam('password');
-        $redirect = $request->getParam('redirect');
+        $redirect = $session->get('auth.redirect') ?: '/';
         $user = $auth->login($username, $password);
         if ($user) {
             $this->flash('success', 'Vous êtes maintenant connecté');
 
-            return $response->withAddedHeader('location', $redirect ?: '/');
+            return (new Response())->withHeader('Location', $redirect);
         }
         $this->flash('error', 'Mot de passe ou identifiant incorrect');
 
-        return $this->render('@auth/login', compact('redirect'));
+        return $this->redirect('auth.login');
     }
 
     public function destroy(Response $response, AuthService $auth)

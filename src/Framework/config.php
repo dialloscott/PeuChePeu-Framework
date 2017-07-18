@@ -20,6 +20,7 @@ return [
     'settings.determineRouteBeforeAppMiddleware' => true,
     'settings'                                   => \DI\add(['debug' => \DI\get('dev')]),
     'errorHandler'                               => \DI\object(\Framework\Handler::class),
+    'phpErrorHandler'                            => \DI\object(\Framework\Handler::class),
     'upload_path'                                => \DI\string('{basepath}/public/uploads'),
 
     // Misc
@@ -90,5 +91,11 @@ return [
             $c->get('mailer'),
             $c->get('view')
         );
-    })
+    }),
+
+    // Payment
+    'stripe'                                     => function ($c) {
+        return new \Framework\Payment\Stripe($c->get('stripe.secret'));
+    },
+    \Framework\Payment\Stripe::class             => \DI\get('stripe')
 ];
